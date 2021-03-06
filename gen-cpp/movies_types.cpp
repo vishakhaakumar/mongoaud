@@ -349,4 +349,116 @@ void location::printTo(std::ostream& out) const {
   out << ")";
 }
 
+
+Movie::~Movie() noexcept {
+}
+
+
+void Movie::__set_movie_id(const int64_t val) {
+  this->movie_id = val;
+}
+
+void Movie::__set_title(const std::string& val) {
+  this->title = val;
+}
+std::ostream& operator<<(std::ostream& out, const Movie& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+
+uint32_t Movie::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_I64) {
+          xfer += iprot->readI64(this->movie_id);
+          this->__isset.movie_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->title);
+          this->__isset.title = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t Movie::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("Movie");
+
+  xfer += oprot->writeFieldBegin("movie_id", ::apache::thrift::protocol::T_I64, 1);
+  xfer += oprot->writeI64(this->movie_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("title", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->title);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(Movie &a, Movie &b) {
+  using ::std::swap;
+  swap(a.movie_id, b.movie_id);
+  swap(a.title, b.title);
+  swap(a.__isset, b.__isset);
+}
+
+Movie::Movie(const Movie& other5) {
+  movie_id = other5.movie_id;
+  title = other5.title;
+  __isset = other5.__isset;
+}
+Movie& Movie::operator=(const Movie& other6) {
+  movie_id = other6.movie_id;
+  title = other6.title;
+  __isset = other6.__isset;
+  return *this;
+}
+void Movie::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "Movie(";
+  out << "movie_id=" << to_string(movie_id);
+  out << ", " << "title=" << to_string(title);
+  out << ")";
+}
+
 } // namespace

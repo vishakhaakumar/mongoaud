@@ -70,6 +70,8 @@ class ServiceException;
 
 class location;
 
+class Movie;
+
 typedef struct _ServiceException__isset {
   _ServiceException__isset() : errorCode(false), message(false) {}
   bool errorCode :1;
@@ -171,6 +173,54 @@ class location : public virtual ::apache::thrift::TBase {
 void swap(location &a, location &b);
 
 std::ostream& operator<<(std::ostream& out, const location& obj);
+
+typedef struct _Movie__isset {
+  _Movie__isset() : movie_id(false), title(false) {}
+  bool movie_id :1;
+  bool title :1;
+} _Movie__isset;
+
+class Movie : public virtual ::apache::thrift::TBase {
+ public:
+
+  Movie(const Movie&);
+  Movie& operator=(const Movie&);
+  Movie() : movie_id(0), title() {
+  }
+
+  virtual ~Movie() noexcept;
+  int64_t movie_id;
+  std::string title;
+
+  _Movie__isset __isset;
+
+  void __set_movie_id(const int64_t val);
+
+  void __set_title(const std::string& val);
+
+  bool operator == (const Movie & rhs) const
+  {
+    if (!(movie_id == rhs.movie_id))
+      return false;
+    if (!(title == rhs.title))
+      return false;
+    return true;
+  }
+  bool operator != (const Movie &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const Movie & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(Movie &a, Movie &b);
+
+std::ostream& operator<<(std::ostream& out, const Movie& obj);
 
 } // namespace
 

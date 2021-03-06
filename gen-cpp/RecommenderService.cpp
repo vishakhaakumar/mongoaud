@@ -117,14 +117,14 @@ uint32_t RecommenderService_GetRecommendations_result::read(::apache::thrift::pr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size5;
-            ::apache::thrift::protocol::TType _etype8;
-            xfer += iprot->readListBegin(_etype8, _size5);
-            this->success.resize(_size5);
-            uint32_t _i9;
-            for (_i9 = 0; _i9 < _size5; ++_i9)
+            uint32_t _size7;
+            ::apache::thrift::protocol::TType _etype10;
+            xfer += iprot->readListBegin(_etype10, _size7);
+            this->success.resize(_size7);
+            uint32_t _i11;
+            for (_i11 = 0; _i11 < _size7; ++_i11)
             {
-              xfer += iprot->readString(this->success[_i9]);
+              xfer += this->success[_i11].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -162,11 +162,11 @@ uint32_t RecommenderService_GetRecommendations_result::write(::apache::thrift::p
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
-      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter10;
-      for (_iter10 = this->success.begin(); _iter10 != this->success.end(); ++_iter10)
+      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->success.size()));
+      std::vector<Movie> ::const_iterator _iter12;
+      for (_iter12 = this->success.begin(); _iter12 != this->success.end(); ++_iter12)
       {
-        xfer += oprot->writeString((*_iter10));
+        xfer += (*_iter12).write(oprot);
       }
       xfer += oprot->writeListEnd();
     }
@@ -211,14 +211,14 @@ uint32_t RecommenderService_GetRecommendations_presult::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size11;
-            ::apache::thrift::protocol::TType _etype14;
-            xfer += iprot->readListBegin(_etype14, _size11);
-            (*(this->success)).resize(_size11);
-            uint32_t _i15;
-            for (_i15 = 0; _i15 < _size11; ++_i15)
+            uint32_t _size13;
+            ::apache::thrift::protocol::TType _etype16;
+            xfer += iprot->readListBegin(_etype16, _size13);
+            (*(this->success)).resize(_size13);
+            uint32_t _i17;
+            for (_i17 = 0; _i17 < _size13; ++_i17)
             {
-              xfer += iprot->readString((*(this->success))[_i15]);
+              xfer += (*(this->success))[_i17].read(iprot);
             }
             xfer += iprot->readListEnd();
           }
@@ -247,7 +247,7 @@ uint32_t RecommenderService_GetRecommendations_presult::read(::apache::thrift::p
   return xfer;
 }
 
-void RecommenderServiceClient::GetRecommendations(std::vector<std::string> & _return, const int64_t user)
+void RecommenderServiceClient::GetRecommendations(std::vector<Movie> & _return, const int64_t user)
 {
   send_GetRecommendations(user);
   recv_GetRecommendations(_return);
@@ -267,7 +267,7 @@ void RecommenderServiceClient::send_GetRecommendations(const int64_t user)
   oprot_->getTransport()->flush();
 }
 
-void RecommenderServiceClient::recv_GetRecommendations(std::vector<std::string> & _return)
+void RecommenderServiceClient::recv_GetRecommendations(std::vector<Movie> & _return)
 {
 
   int32_t rseqid = 0;
@@ -391,7 +391,7 @@ void RecommenderServiceProcessor::process_GetRecommendations(int32_t seqid, ::ap
   return processor;
 }
 
-void RecommenderServiceConcurrentClient::GetRecommendations(std::vector<std::string> & _return, const int64_t user)
+void RecommenderServiceConcurrentClient::GetRecommendations(std::vector<Movie> & _return, const int64_t user)
 {
   int32_t seqid = send_GetRecommendations(user);
   recv_GetRecommendations(_return, seqid);
@@ -415,7 +415,7 @@ int32_t RecommenderServiceConcurrentClient::send_GetRecommendations(const int64_
   return cseqid;
 }
 
-void RecommenderServiceConcurrentClient::recv_GetRecommendations(std::vector<std::string> & _return, const int32_t seqid)
+void RecommenderServiceConcurrentClient::recv_GetRecommendations(std::vector<Movie> & _return, const int32_t seqid)
 {
 
   int32_t rseqid = 0;

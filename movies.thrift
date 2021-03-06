@@ -26,6 +26,11 @@ struct location{
 	2: i64 city;
 }
 
+struct Movie{
+  1: i64 movie_id;
+  2: string title;
+}
+
 enum WeatherType{
 	WARM,
 	COLD
@@ -37,7 +42,7 @@ enum BeverageType{
 }
 
 service RecommenderService{
-  list<string> GetRecommendations(
+  list<Movie> GetRecommendations(
     1: i64 user
   )throws (1: ServiceException se)
 }

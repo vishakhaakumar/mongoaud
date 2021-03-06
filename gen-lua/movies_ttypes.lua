@@ -125,3 +125,50 @@ function location:write(oprot)
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
+
+Movie = __TObject:new{
+  movie_id,
+  title
+}
+
+function Movie:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.I64 then
+        self.movie_id = iprot:readI64()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRING then
+        self.title = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function Movie:write(oprot)
+  oprot:writeStructBegin('Movie')
+  if self.movie_id ~= nil then
+    oprot:writeFieldBegin('movie_id', TType.I64, 1)
+    oprot:writeI64(self.movie_id)
+    oprot:writeFieldEnd()
+  end
+  if self.title ~= nil then
+    oprot:writeFieldBegin('title', TType.STRING, 2)
+    oprot:writeString(self.title)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end

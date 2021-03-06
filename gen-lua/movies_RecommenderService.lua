@@ -166,7 +166,8 @@ function GetRecommendations_result:read(iprot)
         self.success = {}
         local _etype3, _size0 = iprot:readListBegin()
         for _i=1,_size0 do
-          local _elem4 = iprot:readString()
+          local _elem4 = Movie:new{}
+          _elem4:read(iprot)
           table.insert(self.success, _elem4)
         end
         iprot:readListEnd()
@@ -192,9 +193,9 @@ function GetRecommendations_result:write(oprot)
   oprot:writeStructBegin('GetRecommendations_result')
   if self.success ~= nil then
     oprot:writeFieldBegin('success', TType.LIST, 0)
-    oprot:writeListBegin(TType.STRING, #self.success)
+    oprot:writeListBegin(TType.STRUCT, #self.success)
     for _,iter5 in ipairs(self.success) do
-      oprot:writeString(iter5)
+      iter5:write(oprot)
     end
     oprot:writeListEnd()
     oprot:writeFieldEnd()
