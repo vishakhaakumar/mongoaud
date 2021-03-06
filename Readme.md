@@ -2,9 +2,7 @@
 
 This is a project for CIS 578.
 
-Audrey Altman
-Vishakha Kumar
-Nicole Stark
+Audrey Altman, Vishakha Kumar, and Nicole Stark
 
 # Pre-requirements
 
