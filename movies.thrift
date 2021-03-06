@@ -36,6 +36,12 @@ enum BeverageType{
 	COLD
 }
 
+service RecommenderService{
+  string GetRecommendations(
+    1: i64 user
+  )throws (1: ServiceException se)
+}
+
 service OrderBeverageService{
 	string PlaceOrder(
 		1: i64 city
