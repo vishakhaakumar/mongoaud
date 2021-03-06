@@ -22,7 +22,7 @@ namespace movies {
 class RecommenderServiceIf {
  public:
   virtual ~RecommenderServiceIf() {}
-  virtual void GetRecommendations(std::string& _return, const int64_t user) = 0;
+  virtual void GetRecommendations(std::vector<std::string> & _return, const int64_t user) = 0;
 };
 
 class RecommenderServiceIfFactory {
@@ -52,7 +52,7 @@ class RecommenderServiceIfSingletonFactory : virtual public RecommenderServiceIf
 class RecommenderServiceNull : virtual public RecommenderServiceIf {
  public:
   virtual ~RecommenderServiceNull() {}
-  void GetRecommendations(std::string& /* _return */, const int64_t /* user */) {
+  void GetRecommendations(std::vector<std::string> & /* _return */, const int64_t /* user */) {
     return;
   }
 };
@@ -117,16 +117,16 @@ class RecommenderService_GetRecommendations_result {
 
   RecommenderService_GetRecommendations_result(const RecommenderService_GetRecommendations_result&);
   RecommenderService_GetRecommendations_result& operator=(const RecommenderService_GetRecommendations_result&);
-  RecommenderService_GetRecommendations_result() : success() {
+  RecommenderService_GetRecommendations_result() {
   }
 
   virtual ~RecommenderService_GetRecommendations_result() noexcept;
-  std::string success;
+  std::vector<std::string>  success;
   ServiceException se;
 
   _RecommenderService_GetRecommendations_result__isset __isset;
 
-  void __set_success(const std::string& val);
+  void __set_success(const std::vector<std::string> & val);
 
   void __set_se(const ServiceException& val);
 
@@ -160,7 +160,7 @@ class RecommenderService_GetRecommendations_presult {
 
 
   virtual ~RecommenderService_GetRecommendations_presult() noexcept;
-  std::string* success;
+  std::vector<std::string> * success;
   ServiceException se;
 
   _RecommenderService_GetRecommendations_presult__isset __isset;
@@ -194,9 +194,9 @@ class RecommenderServiceClient : virtual public RecommenderServiceIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void GetRecommendations(std::string& _return, const int64_t user);
+  void GetRecommendations(std::vector<std::string> & _return, const int64_t user);
   void send_GetRecommendations(const int64_t user);
-  void recv_GetRecommendations(std::string& _return);
+  void recv_GetRecommendations(std::vector<std::string> & _return);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -245,7 +245,7 @@ class RecommenderServiceMultiface : virtual public RecommenderServiceIf {
     ifaces_.push_back(iface);
   }
  public:
-  void GetRecommendations(std::string& _return, const int64_t user) {
+  void GetRecommendations(std::vector<std::string> & _return, const int64_t user) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
@@ -287,9 +287,9 @@ class RecommenderServiceConcurrentClient : virtual public RecommenderServiceIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void GetRecommendations(std::string& _return, const int64_t user);
+  void GetRecommendations(std::vector<std::string> & _return, const int64_t user);
   int32_t send_GetRecommendations(const int64_t user);
-  void recv_GetRecommendations(std::string& _return, const int32_t seqid);
+  void recv_GetRecommendations(std::vector<std::string> & _return, const int32_t seqid);
  protected:
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

@@ -24,7 +24,6 @@ function _M.Get()
   
   local client = GenericObjectPool:connection(RecommenderServiceClient, "recommender-service", 9092)
   local status, ret = pcall(client.GetRecommendations, client, post.user_id)
---  client:GetRecommendations(1)
   GenericObjectPool:returnConnection(client)
   ngx.say("Status: ", status)
 

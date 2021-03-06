@@ -37,7 +37,7 @@ enum BeverageType{
 }
 
 service RecommenderService{
-  string GetRecommendations(
+  list<string> GetRecommendations(
     1: i64 user
   )throws (1: ServiceException se)
 }

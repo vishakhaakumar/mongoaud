@@ -115,9 +115,9 @@ uint32_t WeatherService_GetWeather_result::read(::apache::thrift::protocol::TPro
     {
       case 0:
         if (ftype == ::apache::thrift::protocol::T_I32) {
-          int32_t ecast5;
-          xfer += iprot->readI32(ecast5);
-          this->success = (WeatherType::type)ecast5;
+          int32_t ecast16;
+          xfer += iprot->readI32(ecast16);
+          this->success = (WeatherType::type)ecast16;
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -179,9 +179,9 @@ uint32_t WeatherService_GetWeather_presult::read(::apache::thrift::protocol::TPr
     {
       case 0:
         if (ftype == ::apache::thrift::protocol::T_I32) {
-          int32_t ecast6;
-          xfer += iprot->readI32(ecast6);
-          (*(this->success)) = (WeatherType::type)ecast6;
+          int32_t ecast17;
+          xfer += iprot->readI32(ecast17);
+          (*(this->success)) = (WeatherType::type)ecast17;
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);

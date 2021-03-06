@@ -21,7 +21,7 @@ class RecommenderServiceHandler : public RecommenderServiceIf {
 		  ClientPool<ThriftClient<WeatherServiceClient>> *) ;
   ~RecommenderServiceHandler() override=default;
 
-  void GetRecommendations(std::string& _return, const int64_t user) override;
+  void GetRecommendations(std::vector<std::string>& _return, const int64_t user) override;
  private:
   ClientPool<ThriftClient<WeatherServiceClient>> *_weather_client_pool;
 };
@@ -35,10 +35,11 @@ RecommenderServiceHandler::RecommenderServiceHandler(
 }
 
 // Remote Procedure "GetRecommendations"
-void RecommenderServiceHandler::GetRecommendations(std::string& _return, const int64_t user){
+void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _return, const int64_t user){
      printf("GetRecommendations\n");
 
-     _return = "Audrey";
+     _return.push_back("Audrey");
+     _return.push_back("Jake");
 }
 
 } // namespace movies

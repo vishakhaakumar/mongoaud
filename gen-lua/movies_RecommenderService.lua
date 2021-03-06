@@ -162,8 +162,14 @@ function GetRecommendations_result:read(iprot)
     if ftype == TType.STOP then
       break
     elseif fid == 0 then
-      if ftype == TType.STRING then
-        self.success = iprot:readString()
+      if ftype == TType.LIST then
+        self.success = {}
+        local _etype3, _size0 = iprot:readListBegin()
+        for _i=1,_size0 do
+          local _elem4 = iprot:readString()
+          table.insert(self.success, _elem4)
+        end
+        iprot:readListEnd()
       else
         iprot:skip(ftype)
       end
@@ -185,8 +191,12 @@ end
 function GetRecommendations_result:write(oprot)
   oprot:writeStructBegin('GetRecommendations_result')
   if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.STRING, 0)
-    oprot:writeString(self.success)
+    oprot:writeFieldBegin('success', TType.LIST, 0)
+    oprot:writeListBegin(TType.STRING, #self.success)
+    for _,iter5 in ipairs(self.success) do
+      oprot:writeString(iter5)
+    end
+    oprot:writeListEnd()
     oprot:writeFieldEnd()
   end
   if self.se ~= nil then
