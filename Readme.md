@@ -29,15 +29,15 @@ thrift --gen lua vending_machine.thrift
 # cheatsheet on docker commands
 
 1. To create docker image from docker file:
-$ docker build -t cis578/movies-project .
+$ docker build -t yourusername/repository-image-name .
 2. List docker images:
 $ docker images -a
 3. Retag the image with a version number: 
-$ docker tag cis578/movies-project yourdockerhubusername/repository-image-name:version_1
+$ docker tag yourusername/repository-image-name yourdockerhubusername/repository-image-name:version_1
 4. Docker-Hub login:
 $ docker login
 5. Push the local image to docker-hub
-$ docker push cis578/movies-project:v1 
+$ docker push abiodunjames/example-node-app:v1 
 6. List docker containers:
 $ docker ps -a
 
