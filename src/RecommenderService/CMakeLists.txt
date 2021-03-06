@@ -1,16 +1,17 @@
 add_executable(
-    WeatherService
-    WeatherService.cpp
-    ${THRIFT_GEN_CPP_DIR}/WeatherService.cpp
+    RecommenderService
+    RecommenderService.cpp
+    ${THRIFT_GEN_CPP_DIR}/RecommenderService.cpp
+    ${THRIFT_GEN_CPP_DIR}/MovieInfoService.cpp
     ${THRIFT_GEN_CPP_DIR}/movies_types.cpp
 )
 
 target_include_directories(
-	WeatherService PRIVATE
+    RecommenderService PRIVATE
 )
 
 target_link_libraries(
-    WeatherService
+    RecommenderService
     nlohmann_json::nlohmann_json
     ${THRIFT_LIB}
     ${CMAKE_THREAD_LIBS_INIT}
@@ -19,4 +20,4 @@ target_link_libraries(
     Boost::log_setup
 )
 
-install(TARGETS WeatherService DESTINATION ./)
+install(TARGETS RecommenderService DESTINATION ./)

@@ -19,29 +19,29 @@ local ttype = Thrift.ttype
 local ttable_size = Thrift.ttable_size
 local TException = Thrift.TException
 
-local OrderBeverageServiceClient = __TObject.new(__TClient, {
-  __type = 'OrderBeverageServiceClient'
+local RecommenderServiceClient = __TObject.new(__TClient, {
+  __type = 'RecommenderServiceClient'
 })
 
-local PlaceOrder_args = __TObject:new{
-	  city
+local GetRecommendations_args = __TObject:new{
+	  user
 }
 
-function OrderBeverageServiceClient:PlaceOrder(city)
-  self:send_PlaceOrder(city)
-  return self:recv_PlaceOrder(city)
+function RecommenderServiceClient:GetRecommendations(user)
+  self:send_GetRecommendations(user)
+  return self:recv_GetRecommendations(user)
 end
 
-function OrderBeverageServiceClient:send_PlaceOrder(city)
-  self.oprot:writeMessageBegin('PlaceOrder', TMessageType.CALL, self._seqid)
-  local args = PlaceOrder_args:new{}
-  args.city = city
+function RecommenderServiceClient:send_GetRecommendations(user)
+  self.oprot:writeMessageBegin('GetRecommendations', TMessageType.CALL, self._seqid)
+  local args = GetRecommendations_args:new{}
+  args.user = user
   args:write(self.oprot)
   self.oprot:writeMessageEnd()
   self.oprot.trans:flush()
 end
 
-function OrderBeverageServiceClient:recv_PlaceOrder(city)
+function RecommenderServiceClient:recv_GetRecommendations(user)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -49,7 +49,7 @@ function OrderBeverageServiceClient:recv_PlaceOrder(city)
     self.iprot:readMessageEnd()
     error(x)
   end
-  local result = PlaceOrder_result:new{}
+  local result = GetRecommendations_result:new{}
   result:read(self.iprot)
   self.iprot:readMessageEnd()
   if result.success ~= nil then
@@ -60,17 +60,17 @@ function OrderBeverageServiceClient:recv_PlaceOrder(city)
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
 
-local OrderBeverageServiceIface = __TObject:new{
-  __type = 'OrderBeverageServiceIface'
+local RecommenderServiceIface = __TObject:new{
+  __type = 'RecommenderServiceIface'
 }
 
 
-local OrderBeverageServiceProcessor = __TObject.new(__TProcessor
+local RecommenderServiceProcessor = __TObject.new(__TProcessor
 , {
- __type = 'OrderBeverageServiceProcessor'
+ __type = 'RecommenderServiceProcessor'
 })
 
-function OrderBeverageServiceProcessor:process(iprot, oprot, server_ctx)
+function RecommenderServiceProcessor:process(iprot, oprot, server_ctx)
   local name, mtype, seqid = iprot:readMessageBegin()
   local func_name = 'process_' .. name
   if not self[func_name] or ttype(self[func_name]) ~= 'function' then
@@ -91,13 +91,13 @@ function OrderBeverageServiceProcessor:process(iprot, oprot, server_ctx)
   end
 end
 
-function OrderBeverageServiceProcessor:process_PlaceOrder(seqid, iprot, oprot, server_ctx)
-  local args = PlaceOrder_args:new{}
+function RecommenderServiceProcessor:process_GetRecommendations(seqid, iprot, oprot, server_ctx)
+  local args = GetRecommendations_args:new{}
   local reply_type = TMessageType.REPLY
   args:read(iprot)
   iprot:readMessageEnd()
-  local result = PlaceOrder_result:new{}
-  local status, res = pcall(self.handler.PlaceOrder, self.handler, args.city)
+  local result = GetRecommendations_result:new{}
+  local status, res = pcall(self.handler.GetRecommendations, self.handler, args.user)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
@@ -106,7 +106,7 @@ function OrderBeverageServiceProcessor:process_PlaceOrder(seqid, iprot, oprot, s
   else
     result.success = res
   end
-  oprot:writeMessageBegin('PlaceOrder', reply_type, seqid)
+  oprot:writeMessageBegin('GetRecommendations', reply_type, seqid)
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
@@ -115,11 +115,11 @@ end
 
 -- HELPER FUNCTIONS AND STRUCTURES
 
---local PlaceOrder_args = __TObject:new{
---  city
+--local GetRecommendations_args = __TObject:new{
+--  user
 --}
 
-function PlaceOrder_args:read(iprot)
+function GetRecommendations_args:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
@@ -127,7 +127,7 @@ function PlaceOrder_args:read(iprot)
       break
     elseif fid == 1 then
       if ftype == TType.I64 then
-        self.city = iprot:readI64()
+        self.user = iprot:readI64()
       else
         iprot:skip(ftype)
       end
@@ -139,31 +139,37 @@ function PlaceOrder_args:read(iprot)
   iprot:readStructEnd()
 end
 
-function PlaceOrder_args:write(oprot)
-  oprot:writeStructBegin('PlaceOrder_args')
-  if self.city ~= nil then
-    oprot:writeFieldBegin('city', TType.I64, 1)
-    oprot:writeI64(self.city)
+function GetRecommendations_args:write(oprot)
+  oprot:writeStructBegin('GetRecommendations_args')
+  if self.user ~= nil then
+    oprot:writeFieldBegin('user', TType.I64, 1)
+    oprot:writeI64(self.user)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
 
-PlaceOrder_result = __TObject:new{
+GetRecommendations_result = __TObject:new{
   success,
   se
 }
 
-function PlaceOrder_result:read(iprot)
+function GetRecommendations_result:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
     elseif fid == 0 then
-      if ftype == TType.STRING then
-        self.success = iprot:readString()
+      if ftype == TType.LIST then
+        self.success = {}
+        local _etype3, _size0 = iprot:readListBegin()
+        for _i=1,_size0 do
+          local _elem4 = iprot:readString()
+          table.insert(self.success, _elem4)
+        end
+        iprot:readListEnd()
       else
         iprot:skip(ftype)
       end
@@ -182,11 +188,15 @@ function PlaceOrder_result:read(iprot)
   iprot:readStructEnd()
 end
 
-function PlaceOrder_result:write(oprot)
-  oprot:writeStructBegin('PlaceOrder_result')
+function GetRecommendations_result:write(oprot)
+  oprot:writeStructBegin('GetRecommendations_result')
   if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.STRING, 0)
-    oprot:writeString(self.success)
+    oprot:writeFieldBegin('success', TType.LIST, 0)
+    oprot:writeListBegin(TType.STRING, #self.success)
+    for _,iter5 in ipairs(self.success) do
+      oprot:writeString(iter5)
+    end
+    oprot:writeListEnd()
     oprot:writeFieldEnd()
   end
   if self.se ~= nil then
@@ -198,4 +208,4 @@ function PlaceOrder_result:write(oprot)
   oprot:writeStructEnd()
 end
 
-return OrderBeverageServiceClient
+return RecommenderServiceClient

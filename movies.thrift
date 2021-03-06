@@ -19,31 +19,14 @@ exception ServiceException {
     2: string message;
 }
 
-
-
-struct location{
-	1: i64 location_id;
-	2: i64 city;
+service RecommenderService{
+  list<string> GetRecommendations(
+    1: i64 user
+  )throws (1: ServiceException se)
 }
 
-enum WeatherType{
-	WARM,
-	COLD
-}
-
-enum BeverageType{
-	HOT,
-	COLD
-}
-
-service OrderBeverageService{
-	string PlaceOrder(
-		1: i64 city
-	)throws (1: ServiceException se)
-}
-
-service WeatherService{
-	WeatherType GetWeather(
-		1: i64 city
-	)
+service MovieInfoService{
+  list<string> GetMoviesByIds(
+    1: list<string> movie_ids
+  )
 }

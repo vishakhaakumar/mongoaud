@@ -9,25 +9,25 @@
 require 'Thrift'
 require 'movies_ttypes'
 
-WeatherServiceClient = __TObject.new(__TClient, {
-  __type = 'WeatherServiceClient'
+MovieInfoServiceClient = __TObject.new(__TClient, {
+  __type = 'MovieInfoServiceClient'
 })
 
-function WeatherServiceClient:GetWeather(city)
-  self:send_GetWeather(city)
-  return self:recv_GetWeather(city)
+function MovieInfoServiceClient:GetMoviesByIds(movie_ids)
+  self:send_GetMoviesByIds(movie_ids)
+  return self:recv_GetMoviesByIds(movie_ids)
 end
 
-function WeatherServiceClient:send_GetWeather(city)
-  self.oprot:writeMessageBegin('GetWeather', TMessageType.CALL, self._seqid)
-  local args = GetWeather_args:new{}
-  args.city = city
+function MovieInfoServiceClient:send_GetMoviesByIds(movie_ids)
+  self.oprot:writeMessageBegin('GetMoviesByIds', TMessageType.CALL, self._seqid)
+  local args = GetMoviesByIds_args:new{}
+  args.movie_ids = movie_ids
   args:write(self.oprot)
   self.oprot:writeMessageEnd()
   self.oprot.trans:flush()
 end
 
-function WeatherServiceClient:recv_GetWeather(city)
+function MovieInfoServiceClient:recv_GetMoviesByIds(movie_ids)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -35,7 +35,7 @@ function WeatherServiceClient:recv_GetWeather(city)
     self.iprot:readMessageEnd()
     error(x)
   end
-  local result = GetWeather_result:new{}
+  local result = GetMoviesByIds_result:new{}
   result:read(self.iprot)
   self.iprot:readMessageEnd()
   if result.success ~= nil then
@@ -43,17 +43,17 @@ function WeatherServiceClient:recv_GetWeather(city)
   end
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
-WeatherServiceIface = __TObject:new{
-  __type = 'WeatherServiceIface'
+MovieInfoServiceIface = __TObject:new{
+  __type = 'MovieInfoServiceIface'
 }
 
 
-WeatherServiceProcessor = __TObject.new(__TProcessor
+MovieInfoServiceProcessor = __TObject.new(__TProcessor
 , {
- __type = 'WeatherServiceProcessor'
+ __type = 'MovieInfoServiceProcessor'
 })
 
-function WeatherServiceProcessor:process(iprot, oprot, server_ctx)
+function MovieInfoServiceProcessor:process(iprot, oprot, server_ctx)
   local name, mtype, seqid = iprot:readMessageBegin()
   local func_name = 'process_' .. name
   if not self[func_name] or ttype(self[func_name]) ~= 'function' then
@@ -74,20 +74,20 @@ function WeatherServiceProcessor:process(iprot, oprot, server_ctx)
   end
 end
 
-function WeatherServiceProcessor:process_GetWeather(seqid, iprot, oprot, server_ctx)
-  local args = GetWeather_args:new{}
+function MovieInfoServiceProcessor:process_GetMoviesByIds(seqid, iprot, oprot, server_ctx)
+  local args = GetMoviesByIds_args:new{}
   local reply_type = TMessageType.REPLY
   args:read(iprot)
   iprot:readMessageEnd()
-  local result = GetWeather_result:new{}
-  local status, res = pcall(self.handler.GetWeather, self.handler, args.city)
+  local result = GetMoviesByIds_result:new{}
+  local status, res = pcall(self.handler.GetMoviesByIds, self.handler, args.movie_ids)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
   else
     result.success = res
   end
-  oprot:writeMessageBegin('GetWeather', reply_type, seqid)
+  oprot:writeMessageBegin('GetMoviesByIds', reply_type, seqid)
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
@@ -96,19 +96,25 @@ end
 
 -- HELPER FUNCTIONS AND STRUCTURES
 
-GetWeather_args = __TObject:new{
-  city
+GetMoviesByIds_args = __TObject:new{
+  movie_ids
 }
 
-function GetWeather_args:read(iprot)
+function GetMoviesByIds_args:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
     elseif fid == 1 then
-      if ftype == TType.I64 then
-        self.city = iprot:readI64()
+      if ftype == TType.LIST then
+        self.movie_ids = {}
+        local _etype9, _size6 = iprot:readListBegin()
+        for _i=1,_size6 do
+          local _elem10 = iprot:readString()
+          table.insert(self.movie_ids, _elem10)
+        end
+        iprot:readListEnd()
       else
         iprot:skip(ftype)
       end
@@ -120,30 +126,40 @@ function GetWeather_args:read(iprot)
   iprot:readStructEnd()
 end
 
-function GetWeather_args:write(oprot)
-  oprot:writeStructBegin('GetWeather_args')
-  if self.city ~= nil then
-    oprot:writeFieldBegin('city', TType.I64, 1)
-    oprot:writeI64(self.city)
+function GetMoviesByIds_args:write(oprot)
+  oprot:writeStructBegin('GetMoviesByIds_args')
+  if self.movie_ids ~= nil then
+    oprot:writeFieldBegin('movie_ids', TType.LIST, 1)
+    oprot:writeListBegin(TType.STRING, #self.movie_ids)
+    for _,iter11 in ipairs(self.movie_ids) do
+      oprot:writeString(iter11)
+    end
+    oprot:writeListEnd()
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
 
-GetWeather_result = __TObject:new{
+GetMoviesByIds_result = __TObject:new{
   success
 }
 
-function GetWeather_result:read(iprot)
+function GetMoviesByIds_result:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
     elseif fid == 0 then
-      if ftype == TType.I32 then
-        self.success = iprot:readI32()
+      if ftype == TType.LIST then
+        self.success = {}
+        local _etype15, _size12 = iprot:readListBegin()
+        for _i=1,_size12 do
+          local _elem16 = iprot:readString()
+          table.insert(self.success, _elem16)
+        end
+        iprot:readListEnd()
       else
         iprot:skip(ftype)
       end
@@ -155,11 +171,15 @@ function GetWeather_result:read(iprot)
   iprot:readStructEnd()
 end
 
-function GetWeather_result:write(oprot)
-  oprot:writeStructBegin('GetWeather_result')
+function GetMoviesByIds_result:write(oprot)
+  oprot:writeStructBegin('GetMoviesByIds_result')
   if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.I32, 0)
-    oprot:writeI32(self.success)
+    oprot:writeFieldBegin('success', TType.LIST, 0)
+    oprot:writeListBegin(TType.STRING, #self.success)
+    for _,iter17 in ipairs(self.success) do
+      oprot:writeString(iter17)
+    end
+    oprot:writeListEnd()
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()

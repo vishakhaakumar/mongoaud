@@ -21,16 +21,6 @@ local ErrorCode = {
   SE_RABBITMQ_CONN_ERROR = 7
 }
 
-local WeatherType = {
-  WARM = 0,
-  COLD = 1
-}
-
-local BeverageType = {
-  HOT = 0,
-  COLD = 1
-}
-
 local ServiceException = TException:new{
   __type = 'ServiceException',
   errorCode,

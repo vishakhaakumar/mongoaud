@@ -1,14 +1,10 @@
 {
-  "order-beverage-service": {
-    "addr": "order-beverage-service",
-    "port": 9090
-  },
-  "weather-service": {
-    "addr": "weather-service",
-    "port": 9091
-  },
   "recommender-service": {
     "addr": "recommender-service",
     "port": 9092
+  },
+  "movie-info-service": {
+    "addr": "movie-info-service",
+    "port": 9093
   }
 }

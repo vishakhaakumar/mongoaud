@@ -5,7 +5,7 @@
 #include <signal.h>
 
 #include "../utils.h"
-#include "WeatherHandler.h"
+#include "RecommenderHandler.h"
 
 using json = nlohmann::json;
 using apache::thrift::server::TThreadedServer;
@@ -36,19 +36,28 @@ int main(int argc, char **argv) {
   }
 
   // 3: get my port
-  int my_port = config_json["weather-service"]["port"];
+  int my_port = config_json["recommender-service"]["port"];
 
-  // 4: configure this server
+  // 4: get the movie info service's port and address
+  int movie_info_service_port = config_json["movie-info-service"]["port"];
+  std::string movie_info_service_addr = config_json["movie-info-service"]["addr"];
+ 
+  // 5: get the client of movie-info-service
+  ClientPool<ThriftClient<MovieInfoServiceClient>> movie_info_client_pool(
+      "movie-info-service", movie_info_service_addr, movie_info_service_port, 0, 128, 1000);
+
+  // 6: configure this server
   TThreadedServer server(
-      std::make_shared<WeatherServiceProcessor>(
-          std::make_shared<WeatherServiceHandler>()),
+      std::make_shared<RecommenderServiceProcessor>(
+          std::make_shared<RecommenderServiceHandler>(
+              &movie_info_client_pool)),
       std::make_shared<TServerSocket>("0.0.0.0", my_port),
       std::make_shared<TFramedTransportFactory>(),
       std::make_shared<TBinaryProtocolFactory>()
   );
   
-  // 5: start the server
-  std::cout << "Starting the weather server ..." << std::endl;
+  // 7: start the server
+  std::cout << "Starting the recommender server ..." << std::endl;
   server.serve();
   return 0;
 }

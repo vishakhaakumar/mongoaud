@@ -1,22 +1,16 @@
 version: "3"
 services:
-  order-beverage-service:
-    image: cis578/movies-project:latest
-    hostname: order-beverage-service
-    restart: always
-    entrypoint: OrderBeverageService
-
-  weather-service:
-    image: cis578/movies-project:latest
-    hostname: weather-service
-    restart: always
-    entrypoint: WeatherService
-
   recommender-service:
     image: cis578/movies-project:latest
     hostname: recommender-service
     restart: always
     entrypoint: RecommenderService
+
+  movie-info-service:
+    image: cis578/movies-project:latest
+    hostname: movie-info-service
+    restart: always
+    entrypoint: MovieInfoService
     
   nginx-thrift:
     image: yg397/openresty-thrift:xenial
