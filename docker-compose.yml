@@ -1,19 +1,19 @@
 version: "3"
 services:
   recommender-service:
-    image: audreyaltman/movies-project:latest
+    image: nistark/movies-project:latest
     hostname: recommender-service
     restart: always
     entrypoint: RecommenderService
 
   movie-info-service:
-    image: audreyaltman/movies-project:latest
+    image: nistark/movies-project:latest
     hostname: movie-info-service
     restart: always
     entrypoint: MovieInfoService
     
   user-likes-service:
-    image: audreyaltman/movies-project:latest
+    image: nistark/movies-project:latest
     hostname: user-likes-service
     restart: always
     entrypoint: UserLikesService

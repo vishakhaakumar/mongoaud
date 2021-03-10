@@ -6,26 +6,12 @@
 --
 
 
-local movies_ttype = require 'movies_ttypes'
+require 'Thrift'
+require 'movies_ttypes'
 
-local Thrift = require 'Thrift'
-local TType = Thrift.TType
-local TMessageType = Thrift.TMessageType
-local __TObject = Thrift.__TObject
-local TApplicationException = Thrift.TApplicationException
-local __TClient = Thrift.__TClient
-local __TProcessor = Thrift.__TProcessor
-local ttype = Thrift.ttype
-local ttable_size = Thrift.ttable_size
-local TException = Thrift.TException
-
-local RecommenderServiceClient = __TObject.new(__TClient, {
+RecommenderServiceClient = __TObject.new(__TClient, {
   __type = 'RecommenderServiceClient'
 })
-
-local GetRecommendations_args = __TObject:new{
-	  user
-}
 
 function RecommenderServiceClient:GetRecommendations(user)
   self:send_GetRecommendations(user)
@@ -59,13 +45,12 @@ function RecommenderServiceClient:recv_GetRecommendations(user)
   end
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
-
-local RecommenderServiceIface = __TObject:new{
+RecommenderServiceIface = __TObject:new{
   __type = 'RecommenderServiceIface'
 }
 
 
-local RecommenderServiceProcessor = __TObject.new(__TProcessor
+RecommenderServiceProcessor = __TObject.new(__TProcessor
 , {
  __type = 'RecommenderServiceProcessor'
 })
@@ -74,20 +59,17 @@ function RecommenderServiceProcessor:process(iprot, oprot, server_ctx)
   local name, mtype, seqid = iprot:readMessageBegin()
   local func_name = 'process_' .. name
   if not self[func_name] or ttype(self[func_name]) ~= 'function' then
-    if oprot ~= nil then
-      iprot:skip(TType.STRUCT)
-      iprot:readMessageEnd()
-      x = TApplicationException:new{
-        errorCode = TApplicationException.UNKNOWN_METHOD
-      }
-      oprot:writeMessageBegin(name, TMessageType.EXCEPTION, seqid)
-      x:write(oprot)
-      oprot:writeMessageEnd()
-      oprot.trans:flush()
-    end
-    return false, 'Unknown function '..name
+    iprot:skip(TType.STRUCT)
+    iprot:readMessageEnd()
+    x = TApplicationException:new{
+      errorCode = TApplicationException.UNKNOWN_METHOD
+    }
+    oprot:writeMessageBegin(name, TMessageType.EXCEPTION, seqid)
+    x:write(oprot)
+    oprot:writeMessageEnd()
+    oprot.trans:flush()
   else
-    return self[func_name](self, seqid, iprot, oprot, server_ctx)
+    self[func_name](self, seqid, iprot, oprot, server_ctx)
   end
 end
 
@@ -110,14 +92,13 @@ function RecommenderServiceProcessor:process_GetRecommendations(seqid, iprot, op
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
-  return status, res
 end
 
 -- HELPER FUNCTIONS AND STRUCTURES
 
---local GetRecommendations_args = __TObject:new{
---  user
---}
+GetRecommendations_args = __TObject:new{
+  user
+}
 
 function GetRecommendations_args:read(iprot)
   iprot:readStructBegin()
@@ -207,5 +188,3 @@ function GetRecommendations_result:write(oprot)
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
-
-return RecommenderServiceClient

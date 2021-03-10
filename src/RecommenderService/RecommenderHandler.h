@@ -80,7 +80,7 @@ void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _re
     auto user_likes_client = user_likes_client_wrapper->GetClient();
 
     // Call the remote procedure : GetMovieLikesByIds
-    std::vector<int> _return_movie_likes;
+    std::vector<int64_t> _return_movie_likes;
     try {
 		// Doesn't currently change output, call is simply made to check if error occurs
       user_likes_client->GetMovieLikesByIds(_return_movie_likes, movie_ids);

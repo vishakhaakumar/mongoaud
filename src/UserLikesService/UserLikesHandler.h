@@ -19,7 +19,7 @@ class UserLikesServiceHandler : public UserLikesServiceIf {
   UserLikesServiceHandler();
   ~UserLikesServiceHandler() override=default;
 
-  void GetMovieLikesByIds(std::vector<int>& _return, const std::vector<std::string> & movie_ids) override;
+  void GetMovieLikesByIds(std::vector<int64_t>& _return, const std::vector<std::string> & movie_ids) override;
   void LikeDislikeMovie(std::string & user_id, std::string & movie_id, bool & likeDislike) override;
 };
 
@@ -29,7 +29,7 @@ UserLikesServiceHandler::UserLikesServiceHandler() {
 }
 
 // Remote Procedure "GetMoviesLikesByIds"
-void UserLikesServiceHandler::GetMovieLikesByIds(std::vector<int>& _return, const std::vector<std::string> & movie_ids) {
+void UserLikesServiceHandler::GetMovieLikesByIds(std::vector<int64_t>& _return, const std::vector<std::string> & movie_ids) {
 	_return.push_back(-5);
 	_return.push_back(8);
 }

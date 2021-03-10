@@ -57,20 +57,17 @@ function MovieInfoServiceProcessor:process(iprot, oprot, server_ctx)
   local name, mtype, seqid = iprot:readMessageBegin()
   local func_name = 'process_' .. name
   if not self[func_name] or ttype(self[func_name]) ~= 'function' then
-    if oprot ~= nil then
-      iprot:skip(TType.STRUCT)
-      iprot:readMessageEnd()
-      x = TApplicationException:new{
-        errorCode = TApplicationException.UNKNOWN_METHOD
-      }
-      oprot:writeMessageBegin(name, TMessageType.EXCEPTION, seqid)
-      x:write(oprot)
-      oprot:writeMessageEnd()
-      oprot.trans:flush()
-    end
-    return false, 'Unknown function '..name
+    iprot:skip(TType.STRUCT)
+    iprot:readMessageEnd()
+    x = TApplicationException:new{
+      errorCode = TApplicationException.UNKNOWN_METHOD
+    }
+    oprot:writeMessageBegin(name, TMessageType.EXCEPTION, seqid)
+    x:write(oprot)
+    oprot:writeMessageEnd()
+    oprot.trans:flush()
   else
-    return self[func_name](self, seqid, iprot, oprot, server_ctx)
+    self[func_name](self, seqid, iprot, oprot, server_ctx)
   end
 end
 
@@ -91,7 +88,6 @@ function MovieInfoServiceProcessor:process_GetMoviesByIds(seqid, iprot, oprot, s
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
-  return status, res
 end
 
 -- HELPER FUNCTIONS AND STRUCTURES

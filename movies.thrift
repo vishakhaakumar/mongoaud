@@ -32,7 +32,7 @@ service MovieInfoService{
 }
 
 service UserLikesService{
-	list<int> GetMovieLikesByIds(
+	list<i64> GetMovieLikesByIds(
      1: list<string> movie_ids
    )
    void LikeDislikeMovie(
