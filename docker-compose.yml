@@ -12,6 +12,12 @@ services:
     restart: always
     entrypoint: MovieInfoService
     
+  user-likes-service:
+    image: audreyaltman/movies-project:latest
+    hostname: user-likes-service
+    restart: always
+    entrypoint: UserLikesService
+    
   nginx-thrift:
     image: yg397/openresty-thrift:xenial
     hostname: nginx-thrift

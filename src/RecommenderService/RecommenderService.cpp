@@ -45,18 +45,26 @@ int main(int argc, char **argv) {
   // 5: get the client of movie-info-service
   ClientPool<ThriftClient<MovieInfoServiceClient>> movie_info_client_pool(
       "movie-info-service", movie_info_service_addr, movie_info_service_port, 0, 128, 1000);
+	  
+  // 5: get the user likes service's port and address
+  int user_likes_service_port = config_json["user-likes-service"]["port"];
+  std::string user_likes_service_addr = config_json["user-likes-service"]["addr"];
+ 
+  // 6: get the client of user-likes-service
+  ClientPool<ThriftClient<UserLikesServiceClient>> user_likes_client_pool(
+      "user-likes-service", user_likes_service_addr, user_likes_service_port, 0, 128, 1000);
 
-  // 6: configure this server
+  // 7: configure this server
   TThreadedServer server(
       std::make_shared<RecommenderServiceProcessor>(
           std::make_shared<RecommenderServiceHandler>(
-              &movie_info_client_pool)),
+              &movie_info_client_pool, &user_likes_client_pool)),
       std::make_shared<TServerSocket>("0.0.0.0", my_port),
       std::make_shared<TFramedTransportFactory>(),
       std::make_shared<TBinaryProtocolFactory>()
   );
   
-  // 7: start the server
+  // 8: start the server
   std::cout << "Starting the recommender server ..." << std::endl;
   server.serve();
   return 0;

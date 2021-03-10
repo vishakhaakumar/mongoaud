@@ -30,3 +30,14 @@ service MovieInfoService{
     1: list<string> movie_ids
   )
 }
+
+service UserLikesService{
+	list<int> GetMovieLikesByIds(
+     1: list<string> movie_ids
+   )
+   void LikeDislikeMovie(
+     1: string user_id
+     2: string movie_id
+     3: bool likeDislike
+   )
+}
