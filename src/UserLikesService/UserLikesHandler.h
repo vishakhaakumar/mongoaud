@@ -20,7 +20,7 @@ class UserLikesServiceHandler : public UserLikesServiceIf {
   ~UserLikesServiceHandler() override=default;
 
   void GetMovieLikesByIds(std::vector<int64_t>& _return, const std::vector<std::string> & movie_ids) override;
-  void LikeDislikeMovie(std::string & user_id, std::string & movie_id, bool & likeDislike) override;
+  void LikeDislikeMovie(const std::string& user_id, const std::string& movie_id, const bool likeDislike) override;
 };
 
 // Constructor
@@ -34,8 +34,14 @@ void UserLikesServiceHandler::GetMovieLikesByIds(std::vector<int64_t>& _return, 
 	_return.push_back(8);
 }
 // Remote Procedure "LikeDislikeMovie"
-void UserLikesServiceHandler::LikeDislikeMovie(std::string & user_id, std::string & movie_id, bool & likeDislike) {
+void UserLikesServiceHandler::LikeDislikeMovie(const std::string& user_id, const std::string& movie_id, const bool likeDislike) {
 	// TO DO: update database with user like or dislike (false == dislike, true == like)
+	if (user_id != "") {
+		// adjust like or dislike
+	}
+	else {
+		return;
+	}
 }
 
 } // namespace movies

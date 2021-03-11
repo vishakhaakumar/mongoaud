@@ -92,7 +92,7 @@ void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _re
     _user_likes_client_pool->Push(user_likes_client_wrapper);
 	
 	// Call the remote procedure : LikeDislikeMovie
-	std::string user_id = "123"
+	std::string user_id = "123";
 	std::string user_movie_id = "xyz";
 	bool user_like_dislike = false;
     try {
