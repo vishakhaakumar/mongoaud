@@ -1,6 +1,7 @@
 namespace cpp movies
 namespace py movies
 namespace lua movies
+namespace java com.thrift
 
 
 enum ErrorCode {
@@ -29,4 +30,15 @@ service MovieInfoService{
   list<string> GetMoviesByIds(
     1: list<string> movie_ids
   )
+}
+
+struct movieName{
+	1: string movieTitle;
+}
+
+	
+service MovieSearchService{
+	string getMovie(
+		1: string movieName
+	)
 }
