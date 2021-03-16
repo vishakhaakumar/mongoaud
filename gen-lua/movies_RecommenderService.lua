@@ -6,8 +6,7 @@
 --
 
 
-require 'Thrift'
-require 'movies_ttypes'
+local movies_ttype = require 'movies_ttypes'
 
 		
 local Thrift = require 'Thrift'	
