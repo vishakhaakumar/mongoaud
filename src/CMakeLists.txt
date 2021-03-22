@@ -17,3 +17,4 @@ set(THRIFT_GEN_CPP_DIR ../../gen-cpp)
 
 add_subdirectory(RecommenderService)
 add_subdirectory(MovieInfoService)
+add_subdirectory(UserLikesService)
