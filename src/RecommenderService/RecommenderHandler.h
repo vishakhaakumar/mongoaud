@@ -91,16 +91,16 @@ void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _re
     }
     _user_likes_client_pool->Push(user_likes_client_wrapper);
 	
-	// Call the remote procedure : LikeDislikeMovie
+	// Call the remote procedure : UserRateMovie
 	std::string user_id = "123";
 	std::string user_movie_id = "xyz";
-	bool user_like_dislike = false;
+	int64_t user_like_dislike = 1;
     try {
 		// Doesn't currently do anything, call is simply made to check if error occurs
-      user_likes_client->LikeDislikeMovie(user_id, user_movie_id, user_like_dislike);
+      user_likes_client->UserRateMovie(user_id, user_movie_id, user_like_dislike);
     } catch (...) {
       _user_likes_client_pool->Push(user_likes_client_wrapper);
-      LOG(error) << "Failed to send call LikeDislikeMovie to user-likes-client";
+      LOG(error) << "Failed to send call UserRateMovie to user-likes-client";
       throw;
     }
     _user_likes_client_pool->Push(user_likes_client_wrapper);
