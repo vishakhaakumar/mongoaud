@@ -46,7 +46,14 @@ RecommenderServiceHandler::RecommenderServiceHandler(
 
 // Remote Procedure "UploadRecommendations"
 void RecommenderServiceHandler::UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id){
-    // TODO
+    mongoc_client_t *mongodb_client = mongoc_client_pool_pop(
+        _mongodb_client_pool);
+    if (!mongodb_client) {
+      ServiceException se;
+      se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+      se.message = "Failed to pop a client from MongoDB pool";
+      throw se;
+    }
 }
 
 // Remote Procedure "GetRecommendations"
