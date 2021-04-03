@@ -24,6 +24,7 @@ class RecommenderServiceHandler : public RecommenderServiceIf {
   ~RecommenderServiceHandler() override=default;
 
   void GetRecommendations(std::vector<std::string>& _return, const int64_t user) override;
+  void UploadRecommendation(const int64_t user_id, const std::string& movie_id) override;
  private:
   ClientPool<ThriftClient<MovieInfoServiceClient>> *_movie_info_client_pool;
   ClientPool<ThriftClient<UserLikesServiceClient>> *_user_likes_client_pool;
@@ -37,6 +38,11 @@ RecommenderServiceHandler::RecommenderServiceHandler(
      // Storing the clientpool
      _movie_info_client_pool = movie_info_client_pool;
 	 _user_likes_client_pool = user_likes_client_pool;
+}
+
+// Remote Procedure "UploadRecommendation"
+void RecommenderServiceHandler::UploadRecommendation(const int64_t user_id, const std::string& movie_id){
+    // TODO
 }
 
 // Remote Procedure "GetRecommendations"

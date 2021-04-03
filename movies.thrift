@@ -20,6 +20,11 @@ exception ServiceException {
 }
 
 service RecommenderService{
+  void UploadRecommendation(
+    1: i64 user_id;
+    2: string movie_id;
+  )
+
   list<string> GetRecommendations(
     1: i64 user
   )throws (1: ServiceException se)
