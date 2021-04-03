@@ -10,6 +10,7 @@
 #include <thrift/TDispatchProcessor.h>
 #include <thrift/async/TConcurrentClientSyncInfo.h>
 #include <memory>
+#include <mongoc.h>
 #include "movies_types.h"
 
 namespace movies {
