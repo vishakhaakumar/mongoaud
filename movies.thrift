@@ -20,9 +20,9 @@ exception ServiceException {
 }
 
 service RecommenderService{
-  void UploadRecommendation(
+  void UploadRecommendations(
     1: i64 user_id;
-    2: string movie_id;
+    2: list<string> movie_id;
   )
 
   list<string> GetRecommendations(

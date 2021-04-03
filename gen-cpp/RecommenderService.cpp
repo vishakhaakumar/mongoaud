@@ -9,11 +9,11 @@
 namespace movies {
 
 
-RecommenderService_UploadRecommendation_args::~RecommenderService_UploadRecommendation_args() noexcept {
+RecommenderService_UploadRecommendations_args::~RecommenderService_UploadRecommendations_args() noexcept {
 }
 
 
-uint32_t RecommenderService_UploadRecommendation_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t RecommenderService_UploadRecommendations_args::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -43,8 +43,20 @@ uint32_t RecommenderService_UploadRecommendation_args::read(::apache::thrift::pr
         }
         break;
       case 2:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->movie_id);
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->movie_id.clear();
+            uint32_t _size3;
+            ::apache::thrift::protocol::TType _etype6;
+            xfer += iprot->readListBegin(_etype6, _size3);
+            this->movie_id.resize(_size3);
+            uint32_t _i7;
+            for (_i7 = 0; _i7 < _size3; ++_i7)
+            {
+              xfer += iprot->readString(this->movie_id[_i7]);
+            }
+            xfer += iprot->readListEnd();
+          }
           this->__isset.movie_id = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -62,17 +74,25 @@ uint32_t RecommenderService_UploadRecommendation_args::read(::apache::thrift::pr
   return xfer;
 }
 
-uint32_t RecommenderService_UploadRecommendation_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t RecommenderService_UploadRecommendations_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("RecommenderService_UploadRecommendation_args");
+  xfer += oprot->writeStructBegin("RecommenderService_UploadRecommendations_args");
 
   xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_I64, 1);
   xfer += oprot->writeI64(this->user_id);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("movie_id", ::apache::thrift::protocol::T_STRING, 2);
-  xfer += oprot->writeString(this->movie_id);
+  xfer += oprot->writeFieldBegin("movie_id", ::apache::thrift::protocol::T_LIST, 2);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->movie_id.size()));
+    std::vector<std::string> ::const_iterator _iter8;
+    for (_iter8 = this->movie_id.begin(); _iter8 != this->movie_id.end(); ++_iter8)
+    {
+      xfer += oprot->writeString((*_iter8));
+    }
+    xfer += oprot->writeListEnd();
+  }
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -81,21 +101,29 @@ uint32_t RecommenderService_UploadRecommendation_args::write(::apache::thrift::p
 }
 
 
-RecommenderService_UploadRecommendation_pargs::~RecommenderService_UploadRecommendation_pargs() noexcept {
+RecommenderService_UploadRecommendations_pargs::~RecommenderService_UploadRecommendations_pargs() noexcept {
 }
 
 
-uint32_t RecommenderService_UploadRecommendation_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t RecommenderService_UploadRecommendations_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("RecommenderService_UploadRecommendation_pargs");
+  xfer += oprot->writeStructBegin("RecommenderService_UploadRecommendations_pargs");
 
   xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_I64, 1);
   xfer += oprot->writeI64((*(this->user_id)));
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("movie_id", ::apache::thrift::protocol::T_STRING, 2);
-  xfer += oprot->writeString((*(this->movie_id)));
+  xfer += oprot->writeFieldBegin("movie_id", ::apache::thrift::protocol::T_LIST, 2);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*(this->movie_id)).size()));
+    std::vector<std::string> ::const_iterator _iter9;
+    for (_iter9 = (*(this->movie_id)).begin(); _iter9 != (*(this->movie_id)).end(); ++_iter9)
+    {
+      xfer += oprot->writeString((*_iter9));
+    }
+    xfer += oprot->writeListEnd();
+  }
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -104,11 +132,11 @@ uint32_t RecommenderService_UploadRecommendation_pargs::write(::apache::thrift::
 }
 
 
-RecommenderService_UploadRecommendation_result::~RecommenderService_UploadRecommendation_result() noexcept {
+RecommenderService_UploadRecommendations_result::~RecommenderService_UploadRecommendations_result() noexcept {
 }
 
 
-uint32_t RecommenderService_UploadRecommendation_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t RecommenderService_UploadRecommendations_result::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -136,11 +164,11 @@ uint32_t RecommenderService_UploadRecommendation_result::read(::apache::thrift::
   return xfer;
 }
 
-uint32_t RecommenderService_UploadRecommendation_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t RecommenderService_UploadRecommendations_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
 
   uint32_t xfer = 0;
 
-  xfer += oprot->writeStructBegin("RecommenderService_UploadRecommendation_result");
+  xfer += oprot->writeStructBegin("RecommenderService_UploadRecommendations_result");
 
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
@@ -148,11 +176,11 @@ uint32_t RecommenderService_UploadRecommendation_result::write(::apache::thrift:
 }
 
 
-RecommenderService_UploadRecommendation_presult::~RecommenderService_UploadRecommendation_presult() noexcept {
+RecommenderService_UploadRecommendations_presult::~RecommenderService_UploadRecommendations_presult() noexcept {
 }
 
 
-uint32_t RecommenderService_UploadRecommendation_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t RecommenderService_UploadRecommendations_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -289,14 +317,14 @@ uint32_t RecommenderService_GetRecommendations_result::read(::apache::thrift::pr
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->success.clear();
-            uint32_t _size3;
-            ::apache::thrift::protocol::TType _etype6;
-            xfer += iprot->readListBegin(_etype6, _size3);
-            this->success.resize(_size3);
-            uint32_t _i7;
-            for (_i7 = 0; _i7 < _size3; ++_i7)
+            uint32_t _size10;
+            ::apache::thrift::protocol::TType _etype13;
+            xfer += iprot->readListBegin(_etype13, _size10);
+            this->success.resize(_size10);
+            uint32_t _i14;
+            for (_i14 = 0; _i14 < _size10; ++_i14)
             {
-              xfer += iprot->readString(this->success[_i7]);
+              xfer += iprot->readString(this->success[_i14]);
             }
             xfer += iprot->readListEnd();
           }
@@ -335,10 +363,10 @@ uint32_t RecommenderService_GetRecommendations_result::write(::apache::thrift::p
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
     {
       xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->success.size()));
-      std::vector<std::string> ::const_iterator _iter8;
-      for (_iter8 = this->success.begin(); _iter8 != this->success.end(); ++_iter8)
+      std::vector<std::string> ::const_iterator _iter15;
+      for (_iter15 = this->success.begin(); _iter15 != this->success.end(); ++_iter15)
       {
-        xfer += oprot->writeString((*_iter8));
+        xfer += oprot->writeString((*_iter15));
       }
       xfer += oprot->writeListEnd();
     }
@@ -383,14 +411,14 @@ uint32_t RecommenderService_GetRecommendations_presult::read(::apache::thrift::p
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             (*(this->success)).clear();
-            uint32_t _size9;
-            ::apache::thrift::protocol::TType _etype12;
-            xfer += iprot->readListBegin(_etype12, _size9);
-            (*(this->success)).resize(_size9);
-            uint32_t _i13;
-            for (_i13 = 0; _i13 < _size9; ++_i13)
+            uint32_t _size16;
+            ::apache::thrift::protocol::TType _etype19;
+            xfer += iprot->readListBegin(_etype19, _size16);
+            (*(this->success)).resize(_size16);
+            uint32_t _i20;
+            for (_i20 = 0; _i20 < _size16; ++_i20)
             {
-              xfer += iprot->readString((*(this->success))[_i13]);
+              xfer += iprot->readString((*(this->success))[_i20]);
             }
             xfer += iprot->readListEnd();
           }
@@ -419,18 +447,18 @@ uint32_t RecommenderService_GetRecommendations_presult::read(::apache::thrift::p
   return xfer;
 }
 
-void RecommenderServiceClient::UploadRecommendation(const int64_t user_id, const std::string& movie_id)
+void RecommenderServiceClient::UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id)
 {
-  send_UploadRecommendation(user_id, movie_id);
-  recv_UploadRecommendation();
+  send_UploadRecommendations(user_id, movie_id);
+  recv_UploadRecommendations();
 }
 
-void RecommenderServiceClient::send_UploadRecommendation(const int64_t user_id, const std::string& movie_id)
+void RecommenderServiceClient::send_UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id)
 {
   int32_t cseqid = 0;
-  oprot_->writeMessageBegin("UploadRecommendation", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("UploadRecommendations", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  RecommenderService_UploadRecommendation_pargs args;
+  RecommenderService_UploadRecommendations_pargs args;
   args.user_id = &user_id;
   args.movie_id = &movie_id;
   args.write(oprot_);
@@ -440,7 +468,7 @@ void RecommenderServiceClient::send_UploadRecommendation(const int64_t user_id, 
   oprot_->getTransport()->flush();
 }
 
-void RecommenderServiceClient::recv_UploadRecommendation()
+void RecommenderServiceClient::recv_UploadRecommendations()
 {
 
   int32_t rseqid = 0;
@@ -460,12 +488,12 @@ void RecommenderServiceClient::recv_UploadRecommendation()
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  if (fname.compare("UploadRecommendation") != 0) {
+  if (fname.compare("UploadRecommendations") != 0) {
     iprot_->skip(::apache::thrift::protocol::T_STRUCT);
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  RecommenderService_UploadRecommendation_presult result;
+  RecommenderService_UploadRecommendations_presult result;
   result.read(iprot_);
   iprot_->readMessageEnd();
   iprot_->getTransport()->readEnd();
@@ -553,37 +581,37 @@ bool RecommenderServiceProcessor::dispatchCall(::apache::thrift::protocol::TProt
   return true;
 }
 
-void RecommenderServiceProcessor::process_UploadRecommendation(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+void RecommenderServiceProcessor::process_UploadRecommendations(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = nullptr;
   if (this->eventHandler_.get() != nullptr) {
-    ctx = this->eventHandler_->getContext("RecommenderService.UploadRecommendation", callContext);
+    ctx = this->eventHandler_->getContext("RecommenderService.UploadRecommendations", callContext);
   }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "RecommenderService.UploadRecommendation");
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "RecommenderService.UploadRecommendations");
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->preRead(ctx, "RecommenderService.UploadRecommendation");
+    this->eventHandler_->preRead(ctx, "RecommenderService.UploadRecommendations");
   }
 
-  RecommenderService_UploadRecommendation_args args;
+  RecommenderService_UploadRecommendations_args args;
   args.read(iprot);
   iprot->readMessageEnd();
   uint32_t bytes = iprot->getTransport()->readEnd();
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->postRead(ctx, "RecommenderService.UploadRecommendation", bytes);
+    this->eventHandler_->postRead(ctx, "RecommenderService.UploadRecommendations", bytes);
   }
 
-  RecommenderService_UploadRecommendation_result result;
+  RecommenderService_UploadRecommendations_result result;
   try {
-    iface_->UploadRecommendation(args.user_id, args.movie_id);
+    iface_->UploadRecommendations(args.user_id, args.movie_id);
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
-      this->eventHandler_->handlerError(ctx, "RecommenderService.UploadRecommendation");
+      this->eventHandler_->handlerError(ctx, "RecommenderService.UploadRecommendations");
     }
 
     ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("UploadRecommendation", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    oprot->writeMessageBegin("UploadRecommendations", ::apache::thrift::protocol::T_EXCEPTION, seqid);
     x.write(oprot);
     oprot->writeMessageEnd();
     oprot->getTransport()->writeEnd();
@@ -592,17 +620,17 @@ void RecommenderServiceProcessor::process_UploadRecommendation(int32_t seqid, ::
   }
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->preWrite(ctx, "RecommenderService.UploadRecommendation");
+    this->eventHandler_->preWrite(ctx, "RecommenderService.UploadRecommendations");
   }
 
-  oprot->writeMessageBegin("UploadRecommendation", ::apache::thrift::protocol::T_REPLY, seqid);
+  oprot->writeMessageBegin("UploadRecommendations", ::apache::thrift::protocol::T_REPLY, seqid);
   result.write(oprot);
   oprot->writeMessageEnd();
   bytes = oprot->getTransport()->writeEnd();
   oprot->getTransport()->flush();
 
   if (this->eventHandler_.get() != nullptr) {
-    this->eventHandler_->postWrite(ctx, "RecommenderService.UploadRecommendation", bytes);
+    this->eventHandler_->postWrite(ctx, "RecommenderService.UploadRecommendations", bytes);
   }
 }
 
@@ -670,19 +698,19 @@ void RecommenderServiceProcessor::process_GetRecommendations(int32_t seqid, ::ap
   return processor;
 }
 
-void RecommenderServiceConcurrentClient::UploadRecommendation(const int64_t user_id, const std::string& movie_id)
+void RecommenderServiceConcurrentClient::UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id)
 {
-  int32_t seqid = send_UploadRecommendation(user_id, movie_id);
-  recv_UploadRecommendation(seqid);
+  int32_t seqid = send_UploadRecommendations(user_id, movie_id);
+  recv_UploadRecommendations(seqid);
 }
 
-int32_t RecommenderServiceConcurrentClient::send_UploadRecommendation(const int64_t user_id, const std::string& movie_id)
+int32_t RecommenderServiceConcurrentClient::send_UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
-  oprot_->writeMessageBegin("UploadRecommendation", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("UploadRecommendations", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  RecommenderService_UploadRecommendation_pargs args;
+  RecommenderService_UploadRecommendations_pargs args;
   args.user_id = &user_id;
   args.movie_id = &movie_id;
   args.write(oprot_);
@@ -695,7 +723,7 @@ int32_t RecommenderServiceConcurrentClient::send_UploadRecommendation(const int6
   return cseqid;
 }
 
-void RecommenderServiceConcurrentClient::recv_UploadRecommendation(const int32_t seqid)
+void RecommenderServiceConcurrentClient::recv_UploadRecommendations(const int32_t seqid)
 {
 
   int32_t rseqid = 0;
@@ -724,7 +752,7 @@ void RecommenderServiceConcurrentClient::recv_UploadRecommendation(const int32_t
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
       }
-      if (fname.compare("UploadRecommendation") != 0) {
+      if (fname.compare("UploadRecommendations") != 0) {
         iprot_->skip(::apache::thrift::protocol::T_STRUCT);
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
@@ -733,7 +761,7 @@ void RecommenderServiceConcurrentClient::recv_UploadRecommendation(const int32_t
         using ::apache::thrift::protocol::TProtocolException;
         throw TProtocolException(TProtocolException::INVALID_DATA);
       }
-      RecommenderService_UploadRecommendation_presult result;
+      RecommenderService_UploadRecommendations_presult result;
       result.read(iprot_);
       iprot_->readMessageEnd();
       iprot_->getTransport()->readEnd();

@@ -22,7 +22,7 @@ namespace movies {
 class RecommenderServiceIf {
  public:
   virtual ~RecommenderServiceIf() {}
-  virtual void UploadRecommendation(const int64_t user_id, const std::string& movie_id) = 0;
+  virtual void UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id) = 0;
   virtual void GetRecommendations(std::vector<std::string> & _return, const int64_t user) = 0;
 };
 
@@ -53,7 +53,7 @@ class RecommenderServiceIfSingletonFactory : virtual public RecommenderServiceIf
 class RecommenderServiceNull : virtual public RecommenderServiceIf {
  public:
   virtual ~RecommenderServiceNull() {}
-  void UploadRecommendation(const int64_t /* user_id */, const std::string& /* movie_id */) {
+  void UploadRecommendations(const int64_t /* user_id */, const std::vector<std::string> & /* movie_id */) {
     return;
   }
   void GetRecommendations(std::vector<std::string> & /* _return */, const int64_t /* user */) {
@@ -61,31 +61,31 @@ class RecommenderServiceNull : virtual public RecommenderServiceIf {
   }
 };
 
-typedef struct _RecommenderService_UploadRecommendation_args__isset {
-  _RecommenderService_UploadRecommendation_args__isset() : user_id(false), movie_id(false) {}
+typedef struct _RecommenderService_UploadRecommendations_args__isset {
+  _RecommenderService_UploadRecommendations_args__isset() : user_id(false), movie_id(false) {}
   bool user_id :1;
   bool movie_id :1;
-} _RecommenderService_UploadRecommendation_args__isset;
+} _RecommenderService_UploadRecommendations_args__isset;
 
-class RecommenderService_UploadRecommendation_args {
+class RecommenderService_UploadRecommendations_args {
  public:
 
-  RecommenderService_UploadRecommendation_args(const RecommenderService_UploadRecommendation_args&);
-  RecommenderService_UploadRecommendation_args& operator=(const RecommenderService_UploadRecommendation_args&);
-  RecommenderService_UploadRecommendation_args() : user_id(0), movie_id() {
+  RecommenderService_UploadRecommendations_args(const RecommenderService_UploadRecommendations_args&);
+  RecommenderService_UploadRecommendations_args& operator=(const RecommenderService_UploadRecommendations_args&);
+  RecommenderService_UploadRecommendations_args() : user_id(0) {
   }
 
-  virtual ~RecommenderService_UploadRecommendation_args() noexcept;
+  virtual ~RecommenderService_UploadRecommendations_args() noexcept;
   int64_t user_id;
-  std::string movie_id;
+  std::vector<std::string>  movie_id;
 
-  _RecommenderService_UploadRecommendation_args__isset __isset;
+  _RecommenderService_UploadRecommendations_args__isset __isset;
 
   void __set_user_id(const int64_t val);
 
-  void __set_movie_id(const std::string& val);
+  void __set_movie_id(const std::vector<std::string> & val);
 
-  bool operator == (const RecommenderService_UploadRecommendation_args & rhs) const
+  bool operator == (const RecommenderService_UploadRecommendations_args & rhs) const
   {
     if (!(user_id == rhs.user_id))
       return false;
@@ -93,11 +93,11 @@ class RecommenderService_UploadRecommendation_args {
       return false;
     return true;
   }
-  bool operator != (const RecommenderService_UploadRecommendation_args &rhs) const {
+  bool operator != (const RecommenderService_UploadRecommendations_args &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const RecommenderService_UploadRecommendation_args & ) const;
+  bool operator < (const RecommenderService_UploadRecommendations_args & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -105,38 +105,38 @@ class RecommenderService_UploadRecommendation_args {
 };
 
 
-class RecommenderService_UploadRecommendation_pargs {
+class RecommenderService_UploadRecommendations_pargs {
  public:
 
 
-  virtual ~RecommenderService_UploadRecommendation_pargs() noexcept;
+  virtual ~RecommenderService_UploadRecommendations_pargs() noexcept;
   const int64_t* user_id;
-  const std::string* movie_id;
+  const std::vector<std::string> * movie_id;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
 
-class RecommenderService_UploadRecommendation_result {
+class RecommenderService_UploadRecommendations_result {
  public:
 
-  RecommenderService_UploadRecommendation_result(const RecommenderService_UploadRecommendation_result&);
-  RecommenderService_UploadRecommendation_result& operator=(const RecommenderService_UploadRecommendation_result&);
-  RecommenderService_UploadRecommendation_result() {
+  RecommenderService_UploadRecommendations_result(const RecommenderService_UploadRecommendations_result&);
+  RecommenderService_UploadRecommendations_result& operator=(const RecommenderService_UploadRecommendations_result&);
+  RecommenderService_UploadRecommendations_result() {
   }
 
-  virtual ~RecommenderService_UploadRecommendation_result() noexcept;
+  virtual ~RecommenderService_UploadRecommendations_result() noexcept;
 
-  bool operator == (const RecommenderService_UploadRecommendation_result & /* rhs */) const
+  bool operator == (const RecommenderService_UploadRecommendations_result & /* rhs */) const
   {
     return true;
   }
-  bool operator != (const RecommenderService_UploadRecommendation_result &rhs) const {
+  bool operator != (const RecommenderService_UploadRecommendations_result &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const RecommenderService_UploadRecommendation_result & ) const;
+  bool operator < (const RecommenderService_UploadRecommendations_result & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -144,11 +144,11 @@ class RecommenderService_UploadRecommendation_result {
 };
 
 
-class RecommenderService_UploadRecommendation_presult {
+class RecommenderService_UploadRecommendations_presult {
  public:
 
 
-  virtual ~RecommenderService_UploadRecommendation_presult() noexcept;
+  virtual ~RecommenderService_UploadRecommendations_presult() noexcept;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -291,9 +291,9 @@ class RecommenderServiceClient : virtual public RecommenderServiceIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void UploadRecommendation(const int64_t user_id, const std::string& movie_id);
-  void send_UploadRecommendation(const int64_t user_id, const std::string& movie_id);
-  void recv_UploadRecommendation();
+  void UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id);
+  void send_UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id);
+  void recv_UploadRecommendations();
   void GetRecommendations(std::vector<std::string> & _return, const int64_t user);
   void send_GetRecommendations(const int64_t user);
   void recv_GetRecommendations(std::vector<std::string> & _return);
@@ -312,12 +312,12 @@ class RecommenderServiceProcessor : public ::apache::thrift::TDispatchProcessor 
   typedef  void (RecommenderServiceProcessor::*ProcessFunction)(int32_t, ::apache::thrift::protocol::TProtocol*, ::apache::thrift::protocol::TProtocol*, void*);
   typedef std::map<std::string, ProcessFunction> ProcessMap;
   ProcessMap processMap_;
-  void process_UploadRecommendation(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_UploadRecommendations(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_GetRecommendations(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   RecommenderServiceProcessor(::std::shared_ptr<RecommenderServiceIf> iface) :
     iface_(iface) {
-    processMap_["UploadRecommendation"] = &RecommenderServiceProcessor::process_UploadRecommendation;
+    processMap_["UploadRecommendations"] = &RecommenderServiceProcessor::process_UploadRecommendations;
     processMap_["GetRecommendations"] = &RecommenderServiceProcessor::process_GetRecommendations;
   }
 
@@ -347,13 +347,13 @@ class RecommenderServiceMultiface : virtual public RecommenderServiceIf {
     ifaces_.push_back(iface);
   }
  public:
-  void UploadRecommendation(const int64_t user_id, const std::string& movie_id) {
+  void UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->UploadRecommendation(user_id, movie_id);
+      ifaces_[i]->UploadRecommendations(user_id, movie_id);
     }
-    ifaces_[i]->UploadRecommendation(user_id, movie_id);
+    ifaces_[i]->UploadRecommendations(user_id, movie_id);
   }
 
   void GetRecommendations(std::vector<std::string> & _return, const int64_t user) {
@@ -398,9 +398,9 @@ class RecommenderServiceConcurrentClient : virtual public RecommenderServiceIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void UploadRecommendation(const int64_t user_id, const std::string& movie_id);
-  int32_t send_UploadRecommendation(const int64_t user_id, const std::string& movie_id);
-  void recv_UploadRecommendation(const int32_t seqid);
+  void UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id);
+  int32_t send_UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id);
+  void recv_UploadRecommendations(const int32_t seqid);
   void GetRecommendations(std::vector<std::string> & _return, const int64_t user);
   int32_t send_GetRecommendations(const int64_t user);
   void recv_GetRecommendations(std::vector<std::string> & _return, const int32_t seqid);

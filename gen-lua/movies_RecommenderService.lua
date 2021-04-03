@@ -6,7 +6,6 @@
 --
 
 local movies_ttype = require 'movies_ttypes'
-
 local Thrift = require 'Thrift'
 local TType = Thrift.TType
 local TMessageType = Thrift.TMessageType
@@ -18,11 +17,12 @@ local ttype = Thrift.ttype
 local ttable_size = Thrift.ttable_size
 local TException = Thrift.TException
 
+
 local RecommenderServiceClient = __TObject.new(__TClient, {
   __type = 'RecommenderServiceClient'
 })
 
-local UploadRecommendation_args = __TObject:new{
+local UploadRecommendations_args = __TObject:new{
   user_id,
   movie_id
 }
@@ -31,14 +31,14 @@ local GetRecommendations_args = __TObject:new{
   user
 }
 
-function RecommenderServiceClient:UploadRecommendation(user_id, movie_id)
-  self:send_UploadRecommendation(user_id, movie_id)
-  self:recv_UploadRecommendation(user_id, movie_id)
+function RecommenderServiceClient:UploadRecommendations(user_id, movie_id)
+  self:send_UploadRecommendations(user_id, movie_id)
+  self:recv_UploadRecommendations(user_id, movie_id)
 end
 
-function RecommenderServiceClient:send_UploadRecommendation(user_id, movie_id)
-  self.oprot:writeMessageBegin('UploadRecommendation', TMessageType.CALL, self._seqid)
-  local args = UploadRecommendation_args:new{}
+function RecommenderServiceClient:send_UploadRecommendations(user_id, movie_id)
+  self.oprot:writeMessageBegin('UploadRecommendations', TMessageType.CALL, self._seqid)
+  local args = UploadRecommendations_args:new{}
   args.user_id = user_id
   args.movie_id = movie_id
   args:write(self.oprot)
@@ -46,7 +46,7 @@ function RecommenderServiceClient:send_UploadRecommendation(user_id, movie_id)
   self.oprot.trans:flush()
 end
 
-function RecommenderServiceClient:recv_UploadRecommendation(user_id, movie_id)
+function RecommenderServiceClient:recv_UploadRecommendations(user_id, movie_id)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -54,7 +54,7 @@ function RecommenderServiceClient:recv_UploadRecommendation(user_id, movie_id)
     self.iprot:readMessageEnd()
     error(x)
   end
-  local result = UploadRecommendation_result:new{}
+  local result = UploadRecommendations_result:new{}
   result:read(self.iprot)
   self.iprot:readMessageEnd()
 end
@@ -122,20 +122,20 @@ function RecommenderServiceProcessor:process(iprot, oprot, server_ctx)
   end
 end
 
-function RecommenderServiceProcessor:process_UploadRecommendation(seqid, iprot, oprot, server_ctx)
-  local args = UploadRecommendation_args:new{}
+function RecommenderServiceProcessor:process_UploadRecommendations(seqid, iprot, oprot, server_ctx)
+  local args = UploadRecommendations_args:new{}
   local reply_type = TMessageType.REPLY
   args:read(iprot)
   iprot:readMessageEnd()
-  local result = UploadRecommendation_result:new{}
-  local status, res = pcall(self.handler.UploadRecommendation, self.handler, args.user_id, args.movie_id)
+  local result = UploadRecommendations_result:new{}
+  local status, res = pcall(self.handler.UploadRecommendations, self.handler, args.user_id, args.movie_id)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
   else
     result.success = res
   end
-  oprot:writeMessageBegin('UploadRecommendation', reply_type, seqid)
+  oprot:writeMessageBegin('UploadRecommendations', reply_type, seqid)
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
@@ -166,7 +166,7 @@ end
 
 -- HELPER FUNCTIONS AND STRUCTURES
 
-function UploadRecommendation_args:read(iprot)
+function UploadRecommendations_args:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
@@ -179,8 +179,14 @@ function UploadRecommendation_args:read(iprot)
         iprot:skip(ftype)
       end
     elseif fid == 2 then
-      if ftype == TType.STRING then
-        self.movie_id = iprot:readString()
+      if ftype == TType.LIST then
+        self.movie_id = {}
+        local _etype3, _size0 = iprot:readListBegin()
+        for _i=1,_size0 do
+          local _elem4 = iprot:readString()
+          table.insert(self.movie_id, _elem4)
+        end
+        iprot:readListEnd()
       else
         iprot:skip(ftype)
       end
@@ -192,27 +198,31 @@ function UploadRecommendation_args:read(iprot)
   iprot:readStructEnd()
 end
 
-function UploadRecommendation_args:write(oprot)
-  oprot:writeStructBegin('UploadRecommendation_args')
+function UploadRecommendations_args:write(oprot)
+  oprot:writeStructBegin('UploadRecommendations_args')
   if self.user_id ~= nil then
     oprot:writeFieldBegin('user_id', TType.I64, 1)
     oprot:writeI64(self.user_id)
     oprot:writeFieldEnd()
   end
   if self.movie_id ~= nil then
-    oprot:writeFieldBegin('movie_id', TType.STRING, 2)
-    oprot:writeString(self.movie_id)
+    oprot:writeFieldBegin('movie_id', TType.LIST, 2)
+    oprot:writeListBegin(TType.STRING, #self.movie_id)
+    for _,iter5 in ipairs(self.movie_id) do
+      oprot:writeString(iter5)
+    end
+    oprot:writeListEnd()
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
 
-UploadRecommendation_result = __TObject:new{
+UploadRecommendations_result = __TObject:new{
 
 }
 
-function UploadRecommendation_result:read(iprot)
+function UploadRecommendations_result:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
@@ -226,8 +236,8 @@ function UploadRecommendation_result:read(iprot)
   iprot:readStructEnd()
 end
 
-function UploadRecommendation_result:write(oprot)
-  oprot:writeStructBegin('UploadRecommendation_result')
+function UploadRecommendations_result:write(oprot)
+  oprot:writeStructBegin('UploadRecommendations_result')
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
@@ -277,10 +287,10 @@ function GetRecommendations_result:read(iprot)
     elseif fid == 0 then
       if ftype == TType.LIST then
         self.success = {}
-        local _etype3, _size0 = iprot:readListBegin()
-        for _i=1,_size0 do
-          local _elem4 = iprot:readString()
-          table.insert(self.success, _elem4)
+        local _etype9, _size6 = iprot:readListBegin()
+        for _i=1,_size6 do
+          local _elem10 = iprot:readString()
+          table.insert(self.success, _elem10)
         end
         iprot:readListEnd()
       else
@@ -306,8 +316,8 @@ function GetRecommendations_result:write(oprot)
   if self.success ~= nil then
     oprot:writeFieldBegin('success', TType.LIST, 0)
     oprot:writeListBegin(TType.STRING, #self.success)
-    for _,iter5 in ipairs(self.success) do
-      oprot:writeString(iter5)
+    for _,iter11 in ipairs(self.success) do
+      oprot:writeString(iter11)
     end
     oprot:writeListEnd()
     oprot:writeFieldEnd()

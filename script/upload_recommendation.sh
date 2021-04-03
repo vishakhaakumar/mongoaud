@@ -1,1 +1,1 @@
-curl -d "user_id=1&movie_id=abc" localhost:8080/recommendations/upload
+curl -d "user_id=1&movie_id=abc&movie_id=def" localhost:8080/recommendations/upload
