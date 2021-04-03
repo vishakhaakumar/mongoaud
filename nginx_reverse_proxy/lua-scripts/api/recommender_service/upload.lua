@@ -4,7 +4,7 @@ local function _StrIsEmpty(s)
   return s == nil or s == ''
 end
 
-function _M.Get()
+function _M.Upload()
   local RecommenderServiceClient = require "movies_RecommenderService"
   local GenericObjectPool = require "GenericObjectPool"
   local ngx = ngx
@@ -13,17 +13,17 @@ function _M.Get()
   ngx.req.read_body()
         local post = ngx.req.get_post_args()
 
-        if (_StrIsEmpty(post.user_id) ) then
+        if (_StrIsEmpty(post.user_id) or _StrIsEmpty(post.movie_id)) then
            ngx.status = ngx.HTTP_BAD_REQUEST
            ngx.say("Incomplete arguments")
            ngx.log(ngx.ERR, "Incomplete arguments")
            ngx.exit(ngx.HTTP_BAD_REQUEST)
         end
 
-  ngx.say("Inside Nginx Lua script: Processing Get Recommendations... Request from: ", post.user_id)
+  ngx.say("Inside Nginx Lua script: Processing Upload Recommendations... Request from: ", post.user_id)
   
   local client = GenericObjectPool:connection(RecommenderServiceClient, "recommender-service", 9092)
-  local status, ret = pcall(client.GetRecommendations, client, post.user_id)
+  local status, ret = pcall(client.UploadRecommendation, client, post.user_id, post.movie_id)
   GenericObjectPool:returnConnection(client)
   ngx.say("Status: ", status)
 
@@ -32,17 +32,17 @@ function _M.Get()
           ngx.status = ngx.HTTP_INTERNAL_SERVER_ERROR
         if (ret.message) then
             ngx.header.content_type = "text/plain"
-            ngx.say("Failed to get recommendations: " .. ret.message)
-            ngx.log(ngx.ERR, "Failed to get recommendations: " .. ret.message)
+            ngx.say("Failed to upload recommendations: " .. ret.message)
+            ngx.log(ngx.ERR, "Failed to upload recommendations: " .. ret.message)
         else
             ngx.header.content_type = "text/plain"
-            ngx.say("Failed to get recommendations: " )
-            ngx.log(ngx.ERR, "Failed to get recommendations: " )
+            ngx.say("Failed to upload recommendations: " )
+            ngx.log(ngx.ERR, "Failed to upload recommendations: " )
         end
         ngx.exit(ngx.HTTP_OK)
     else
         ngx.header.content_type = "text/plain"
-        ngx.say("Recommendations: ", ret)
+        ngx.say("Uploaded")
         ngx.exit(ngx.HTTP_OK)
     end
 
