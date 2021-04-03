@@ -19,6 +19,7 @@ namespace movies{
 class RecommenderServiceHandler : public RecommenderServiceIf {
  public:
   RecommenderServiceHandler(
+          mongoc_client_pool_t *,
 		  ClientPool<ThriftClient<MovieInfoServiceClient>> *,
 		  ClientPool<ThriftClient<UserLikesServiceClient>> *) ;
   ~RecommenderServiceHandler() override=default;
@@ -26,16 +27,19 @@ class RecommenderServiceHandler : public RecommenderServiceIf {
   void GetRecommendations(std::vector<std::string>& _return, const int64_t user) override;
   void UploadRecommendations(const int64_t user_id, const std::vector<std::string> & movie_id) override;
  private:
+  mongoc_client_pool_t *_mongodb_client_pool;
   ClientPool<ThriftClient<MovieInfoServiceClient>> *_movie_info_client_pool;
   ClientPool<ThriftClient<UserLikesServiceClient>> *_user_likes_client_pool;
 };
 
 // Constructor
 RecommenderServiceHandler::RecommenderServiceHandler(
+        mongoc_client_pool_t *mongodb_client_pool,
 		ClientPool<ThriftClient<MovieInfoServiceClient>> *movie_info_client_pool,
 		ClientPool<ThriftClient<UserLikesServiceClient>> *user_likes_client_pool) {
 
      // Storing the clientpool
+     _mongodb_client_pool = mongodb_client_pool;
      _movie_info_client_pool = movie_info_client_pool;
 	 _user_likes_client_pool = user_likes_client_pool;
 }
