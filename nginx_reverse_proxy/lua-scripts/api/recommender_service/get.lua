@@ -42,7 +42,12 @@ function _M.Get()
         ngx.exit(ngx.HTTP_OK)
     else
         ngx.header.content_type = "text/plain"
-        ngx.say("Recommendations: ", ret)
+        -- Format the returned list of movies so that each appears on a new line
+        local str = ""
+        for k, v in ipairs(ret) do
+            str = str .. v .. "\n"
+        end
+        ngx.say("Recommendations:\n", str)
         ngx.exit(ngx.HTTP_OK)
     end
 
