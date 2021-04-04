@@ -42,12 +42,16 @@ function _M.Get()
         ngx.exit(ngx.HTTP_OK)
     else
         ngx.header.content_type = "text/plain"
-        -- Format the returned list of movies so that each appears on a new line
-        local str = ""
-        for k, v in ipairs(ret) do
-            str = str .. v .. "\n"
+        if (table.getn(ret) > 0) then
+            -- Format the returned list of movies so that each appears on a new line
+            local str = ""
+            for k, v in ipairs(ret) do
+                str = str .. v .. "\n"
+            end
+            ngx.say("Recommendations:\n", str)
+        else
+            ngx.say("There are no recommendations for this user")
         end
-        ngx.say("Recommendations:\n", str)
         ngx.exit(ngx.HTTP_OK)
     end
 
