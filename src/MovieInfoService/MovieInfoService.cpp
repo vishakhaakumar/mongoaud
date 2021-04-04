@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
   
    // Get mongodb client pool
   mongoc_client_pool_t* mongodb_client_pool =
-     init_mongodb_client_pool(config_json, "recommender", 128);
+     init_mongodb_client_pool(config_json, "moviesdb", 128);
 	 
 	 std::cout << "Mongodb client pool done ..." << std::endl;
 
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
     }
     bool r = false;
     while (!r) {
-      r = CreateIndex(mongodb_client, "recommender", "user_id", true);
+      r = CreateIndex(mongodb_client, "moviesdb", "movies", true);
       if (!r) {
         LOG(error) << "Failed to create mongodb index, try again";
         sleep(1);
