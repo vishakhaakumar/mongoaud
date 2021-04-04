@@ -90,7 +90,6 @@ void RecommenderServiceHandler::UploadRecommendations(const int64_t user_id, con
    } else {
       bson_t *new_doc = bson_new();
       BSON_APPEND_INT64(new_doc, "user_id", user_id);
-//       BSON_APPEND_UTF8(new_doc, "movie_ids", movie_id.front().c_str());
 
       const char *key;
       int idx = 0;
@@ -121,7 +120,7 @@ void RecommenderServiceHandler::UploadRecommendations(const int64_t user_id, con
       bson_destroy(new_doc);
    }
 
-    // cleanup
+    // Cleanup mongo
     bson_destroy(query);
     mongoc_cursor_destroy(cursor);
     mongoc_collection_destroy(collection);
@@ -131,6 +130,9 @@ void RecommenderServiceHandler::UploadRecommendations(const int64_t user_id, con
 
 // Remote Procedure "GetRecommendations"
 void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _return, const int64_t user){
+
+    // Initialize empty movie_id list
+    std::vector<std::string> movie_ids;
 
     // Get mongo client
     mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
@@ -145,70 +147,56 @@ void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _re
        se.message = "Failed to create collection user from DB recommender";
        mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
        throw se;
-       _return.push_back("No collection");
-     } else {
-        _return.push_back("collection found");
-     }
+    }
 
-    // Check if the recommendations for this user already exist in the database
-      bson_t *query = bson_new();
-      BSON_APPEND_INT64(query, "user_id", user);
+    // Get movie recommendations for this user from database
+    bson_t *query = bson_new();
+    BSON_APPEND_INT64(query, "user_id", user);
 
-      mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
-      const bson_t *doc;
-      bool found = mongoc_cursor_next(cursor, &doc);
+    mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
+    const bson_t *doc;
+    bool found = mongoc_cursor_next(cursor, &doc);
 
-      if (!found) {
-        _return.push_back("There are no recommendations this user");
-      } else {
-        auto recommendations_json_char = bson_as_json(doc, nullptr);
-        json recommendations_json = json::parse(recommendations_json_char);
-//        _return.push_back(recommendations_json["movie_ids"]);
-//S
-        for (auto &movie_id : recommendations_json["movie_ids"]) {
-            _return.push_back(movie_id);
+    if (found) {
+       auto recommendations_json_char = bson_as_json(doc, nullptr);
+       json recommendations_json = json::parse(recommendations_json_char);
+
+       for (auto &movie_id : recommendations_json["movie_ids"]) {
+          movie_ids.push_back(movie_id);
+       }
+    }
+
+    if (movie_ids.size() > 0) {
+
+        // Get the movie info service client pool
+        auto movie_info_client_wrapper = _movie_info_client_pool->Pop();
+        if (!movie_info_client_wrapper) {
+            ServiceException se;
+            se.errorCode = ErrorCode::SE_THRIFT_CONN_ERROR;
+            se.message = "Failed to connect to movie-info-service";
+            throw se;
         }
-      }
+        auto movie_info_client = movie_info_client_wrapper->GetClient();
 
-      // Get recommended movie ids for this user
+        // Call the remote procedure : GetMoviesByIds
+        std::vector<std::string> _return_movies;
+        try {
+            movie_info_client->GetMoviesByIds(_return_movies, movie_ids);
+            _return = _return_movies;
+        } catch (...) {
+            _movie_info_client_pool->Push(movie_info_client_wrapper);
+            LOG(error) << "Failed to send call GetMoviesByIds to movie-info-client";
+            throw;
+        }
+        _movie_info_client_pool->Push(movie_info_client_wrapper);
+    }
 
-      // cleanup
-      bson_destroy(query);
-      mongoc_cursor_destroy(cursor);
-      mongoc_collection_destroy(collection);
-      mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-      mongoc_cleanup ();
-
-
-
-
-
-    // Dummy
-//    std::vector<std::string> movie_ids;
-//    movie_ids.push_back("abcd");
-//    movie_ids.push_back("efgh");
-//
-//    // Get the movie info service client pool
-//    auto movie_info_client_wrapper = _movie_info_client_pool->Pop();
-//    if (!movie_info_client_wrapper) {
-//      ServiceException se;
-//      se.errorCode = ErrorCode::SE_THRIFT_CONN_ERROR;
-//      se.message = "Failed to connect to movie-info-service";
-//      throw se;
-//    }
-//    auto movie_info_client = movie_info_client_wrapper->GetClient();
-//
-//    // Call the remote procedure : GetMoviesByIds
-//    std::vector<std::string> _return_movies;
-//    try {
-//      movie_info_client->GetMoviesByIds(_return_movies, movie_ids);
-//      _return = _return_movies;
-//    } catch (...) {
-//      _movie_info_client_pool->Push(movie_info_client_wrapper);
-//      LOG(error) << "Failed to send call GetMoviesByIds to movie-info-client";
-//      throw;
-//    }
-//    _movie_info_client_pool->Push(movie_info_client_wrapper);
+    // Cleanup mongo
+    bson_destroy(query);
+    mongoc_cursor_destroy(cursor);
+    mongoc_collection_destroy(collection);
+    mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+    mongoc_cleanup ();
 }
 
 } // namespace movies
