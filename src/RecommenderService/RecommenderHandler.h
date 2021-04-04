@@ -72,56 +72,53 @@ void RecommenderServiceHandler::UploadRecommendations(const int64_t user_id, con
     }
 
     // Check if the recommendations for this user already exist in the database
-      bson_t *query = bson_new();
-      BSON_APPEND_UTF8(query, "user_id", std::to_string(user_id).c_str());
+    bson_t *query = bson_new();
+    BSON_APPEND_UTF8(query, "user_id", std::to_string(user_id).c_str());
 
-      mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
-      const bson_t *doc;
-      bool found = mongoc_cursor_next(cursor, &doc);
+    mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
+    const bson_t *doc;
+    bool found = mongoc_cursor_next(cursor, &doc);
 
-      if (found) {
-        ServiceException se;
-        se.errorCode = ErrorCode::SE_THRIFT_HANDLER_ERROR;
-        se.message = "User ID " + std::to_string(user_id) + " already existed in MongoDB Recommender";
-        mongoc_cursor_destroy(cursor);
-        mongoc_collection_destroy(collection);
-        mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-        throw se;
-      } else {
-        bson_t *new_doc = bson_new();
-        BSON_APPEND_UTF8(new_doc, "user_id", std::to_string(user_id).c_str());
-        BSON_APPEND_UTF8(new_doc, "movie_ids", movie_id.front().c_str());
-        bson_error_t error;
+   if (found) {
+      ServiceException se;
+      se.errorCode = ErrorCode::SE_THRIFT_HANDLER_ERROR;
+      se.message = "User ID " + std::to_string(user_id) + " already existed in MongoDB Recommender";
+      mongoc_cursor_destroy(cursor);
+      mongoc_collection_destroy(collection);
+      mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+      throw se;
+   } else {
+       bson_t *new_doc = bson_new();
+       BSON_APPEND_UTF8(new_doc, "user_id", std::to_string(user_id).c_str());
+       BSON_APPEND_UTF8(new_doc, "movie_ids", movie_id.front().c_str());
+       bson_error_t error;
 
-        bool plotinsert = mongoc_collection_insert_one (
-            collection, new_doc, nullptr, nullptr, &error);
+      bool plotinsert = mongoc_collection_insert_one (collection, new_doc, nullptr, nullptr, &error);
 
-        if (!plotinsert) {
-          LOG(error) << "Failed to insert recommendations for " << std::to_string(user_id) << " to MongoDB: " << error.message;
-          ServiceException se;
-          se.errorCode = ErrorCode::SE_MONGODB_ERROR;
-          se.message = error.message;
-          bson_destroy(new_doc);
-          mongoc_cursor_destroy(cursor);
-          mongoc_collection_destroy(collection);
-          mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-          throw se;
-        }
-        bson_destroy(new_doc);
+      if (!plotinsert) {
+         LOG(error) << "Failed to insert recommendations for " << std::to_string(user_id) << " to MongoDB: " << error.message;
+         ServiceException se;
+         se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+         se.message = error.message;
+         bson_destroy(new_doc);
+         mongoc_cursor_destroy(cursor);
+         mongoc_collection_destroy(collection);
+         mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+         throw se;
       }
+      bson_destroy(new_doc);
+   }
 
     // cleanup
+    bson_destroy(query);
     mongoc_cursor_destroy(cursor);
     mongoc_collection_destroy(collection);
     mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+    mongoc_cleanup ();
 }
 
 // Remote Procedure "GetRecommendations"
 void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _return, const int64_t user){
-
-    _return.push_back("Testing a another new output 3");
-    
-    // Get recommended movie ids for this user
 
     // Get mongo client
     mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
@@ -155,10 +152,14 @@ void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _re
         _return.push_back("Found user id");
       }
 
+      // Get recommended movie ids for this user
+
       // cleanup
+      bson_destroy(query);
       mongoc_cursor_destroy(cursor);
       mongoc_collection_destroy(collection);
       mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+      mongoc_cleanup ();
 
 
 
