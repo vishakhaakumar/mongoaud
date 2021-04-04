@@ -119,7 +119,7 @@ void RecommenderServiceHandler::UploadRecommendations(const int64_t user_id, con
 // Remote Procedure "GetRecommendations"
 void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _return, const int64_t user){
 
-    _return.push_back("Testing a another new output 2");
+    _return.push_back("Testing a another new output 3");
     
     // Get recommended movie ids for this user
 
@@ -127,19 +127,19 @@ void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _re
     mongoc_client_t *mongodb_client = mongoc_client_pool_pop(_mongodb_client_pool);
 
     // Get mongo collection
-        auto collection = mongoc_client_get_collection(
-            mongodb_client, "recommender", "recommender");
+    auto collection = mongoc_client_get_collection(
+        mongodb_client, "recommender", "recommender");
 
-        if (!collection) {
-          ServiceException se;
-          se.errorCode = ErrorCode::SE_MONGODB_ERROR;
-          se.message = "Failed to create collection user from DB recommender";
-          mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
-          throw se;
-          _return.push_back("No collection");
-        } else {
-           _return.push_back("collection found");
-        }
+    if (!collection) {
+       ServiceException se;
+       se.errorCode = ErrorCode::SE_MONGODB_ERROR;
+       se.message = "Failed to create collection user from DB recommender";
+       mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
+       throw se;
+       _return.push_back("No collection");
+     } else {
+        _return.push_back("collection found");
+     }
 
     // Check if the recommendations for this user already exist in the database
       bson_t *query = bson_new();
@@ -150,11 +150,7 @@ void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _re
       bool found = mongoc_cursor_next(cursor, &doc);
 
       if (!found) {
-        mongoc_cursor_destroy(cursor);
-        mongoc_collection_destroy(collection);
-        mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
         _return.push_back("There are no recommendations for this user.");
-
       } else {
         _return.push_back("Found user id");
       }
