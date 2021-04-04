@@ -73,7 +73,7 @@ void RecommenderServiceHandler::UploadRecommendations(const int64_t user_id, con
 
     // Check if the recommendations for this user already exist in the database
     bson_t *query = bson_new();
-    BSON_APPEND_UTF8(query, "user_id", std::to_string(user_id).c_str());
+    BSON_APPEND_INT64(query, "user_id", user_id);
 
     mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
     const bson_t *doc;
@@ -89,7 +89,7 @@ void RecommenderServiceHandler::UploadRecommendations(const int64_t user_id, con
       throw se;
    } else {
        bson_t *new_doc = bson_new();
-       BSON_APPEND_UTF8(new_doc, "user_id", std::to_string(user_id).c_str());
+       BSON_APPEND_INT64(new_doc, "user_id", user_id);
        BSON_APPEND_UTF8(new_doc, "movie_ids", movie_id.front().c_str());
        bson_error_t error;
 
@@ -140,16 +140,22 @@ void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _re
 
     // Check if the recommendations for this user already exist in the database
       bson_t *query = bson_new();
-      BSON_APPEND_UTF8(query, "user_id", std::to_string(user).c_str());
+      BSON_APPEND_INT64(query, "user_id", user);
 
       mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(collection, query, nullptr, nullptr);
       const bson_t *doc;
       bool found = mongoc_cursor_next(cursor, &doc);
 
       if (!found) {
-        _return.push_back("There are no recommendations for this user.");
+        _return.push_back("There are no recommendations this user");
       } else {
-        _return.push_back("Found user id");
+        auto recommendations_json_char = bson_as_json(doc, nullptr);
+        json recommendations_json = json::parse(recommendations_json_char);
+        _return.push_back(recommendations_json["movie_ids"]);
+//S
+//        for (auto &item : user_info_json["movie_ids"]) {
+//            _return.photo_ids.emplace_back(item);
+//        }
       }
 
       // Get recommended movie ids for this user
