@@ -155,7 +155,20 @@ uint32_t RecommenderService_UploadRecommendations_result::read(::apache::thrift:
     if (ftype == ::apache::thrift::protocol::T_STOP) {
       break;
     }
-    xfer += iprot->skip(ftype);
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->se.read(iprot);
+          this->__isset.se = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
     xfer += iprot->readFieldEnd();
   }
 
@@ -170,6 +183,11 @@ uint32_t RecommenderService_UploadRecommendations_result::write(::apache::thrift
 
   xfer += oprot->writeStructBegin("RecommenderService_UploadRecommendations_result");
 
+  if (this->__isset.se) {
+    xfer += oprot->writeFieldBegin("se", ::apache::thrift::protocol::T_STRUCT, 1);
+    xfer += this->se.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -199,7 +217,20 @@ uint32_t RecommenderService_UploadRecommendations_presult::read(::apache::thrift
     if (ftype == ::apache::thrift::protocol::T_STOP) {
       break;
     }
-    xfer += iprot->skip(ftype);
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->se.read(iprot);
+          this->__isset.se = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
     xfer += iprot->readFieldEnd();
   }
 
@@ -498,6 +529,9 @@ void RecommenderServiceClient::recv_UploadRecommendations()
   iprot_->readMessageEnd();
   iprot_->getTransport()->readEnd();
 
+  if (result.__isset.se) {
+    throw result.se;
+  }
   return;
 }
 
@@ -605,6 +639,9 @@ void RecommenderServiceProcessor::process_UploadRecommendations(int32_t seqid, :
   RecommenderService_UploadRecommendations_result result;
   try {
     iface_->UploadRecommendations(args.user_id, args.movie_id);
+  } catch (ServiceException &se) {
+    result.se = se;
+    result.__isset.se = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != nullptr) {
       this->eventHandler_->handlerError(ctx, "RecommenderService.UploadRecommendations");
@@ -766,6 +803,10 @@ void RecommenderServiceConcurrentClient::recv_UploadRecommendations(const int32_
       iprot_->readMessageEnd();
       iprot_->getTransport()->readEnd();
 
+      if (result.__isset.se) {
+        sentry.commit();
+        throw result.se;
+      }
       sentry.commit();
       return;
     }

@@ -5,6 +5,7 @@
 -- @generated
 --
 
+
 local movies_ttype = require 'movies_ttypes'
 local Thrift = require 'Thrift'
 local TType = Thrift.TType
@@ -132,6 +133,8 @@ function RecommenderServiceProcessor:process_UploadRecommendations(seqid, iprot,
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
+  elseif ttype(res) == 'ServiceException' then
+    result.se = res
   else
     result.success = res
   end
@@ -219,7 +222,7 @@ function UploadRecommendations_args:write(oprot)
 end
 
 UploadRecommendations_result = __TObject:new{
-
+  se
 }
 
 function UploadRecommendations_result:read(iprot)
@@ -228,6 +231,13 @@ function UploadRecommendations_result:read(iprot)
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.se = ServiceException:new{}
+        self.se:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
     else
       iprot:skip(ftype)
     end
@@ -238,6 +248,11 @@ end
 
 function UploadRecommendations_result:write(oprot)
   oprot:writeStructBegin('UploadRecommendations_result')
+  if self.se ~= nil then
+    oprot:writeFieldBegin('se', TType.STRUCT, 1)
+    self.se:write(oprot)
+    oprot:writeFieldEnd()
+  end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end

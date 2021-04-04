@@ -10,7 +10,6 @@
 #include <thrift/TDispatchProcessor.h>
 #include <thrift/async/TConcurrentClientSyncInfo.h>
 #include <memory>
-#include <mongoc.h>
 #include "movies_types.h"
 
 namespace movies {
@@ -118,6 +117,10 @@ class RecommenderService_UploadRecommendations_pargs {
 
 };
 
+typedef struct _RecommenderService_UploadRecommendations_result__isset {
+  _RecommenderService_UploadRecommendations_result__isset() : se(false) {}
+  bool se :1;
+} _RecommenderService_UploadRecommendations_result__isset;
 
 class RecommenderService_UploadRecommendations_result {
  public:
@@ -128,9 +131,16 @@ class RecommenderService_UploadRecommendations_result {
   }
 
   virtual ~RecommenderService_UploadRecommendations_result() noexcept;
+  ServiceException se;
 
-  bool operator == (const RecommenderService_UploadRecommendations_result & /* rhs */) const
+  _RecommenderService_UploadRecommendations_result__isset __isset;
+
+  void __set_se(const ServiceException& val);
+
+  bool operator == (const RecommenderService_UploadRecommendations_result & rhs) const
   {
+    if (!(se == rhs.se))
+      return false;
     return true;
   }
   bool operator != (const RecommenderService_UploadRecommendations_result &rhs) const {
@@ -144,12 +154,19 @@ class RecommenderService_UploadRecommendations_result {
 
 };
 
+typedef struct _RecommenderService_UploadRecommendations_presult__isset {
+  _RecommenderService_UploadRecommendations_presult__isset() : se(false) {}
+  bool se :1;
+} _RecommenderService_UploadRecommendations_presult__isset;
 
 class RecommenderService_UploadRecommendations_presult {
  public:
 
 
   virtual ~RecommenderService_UploadRecommendations_presult() noexcept;
+  ServiceException se;
+
+  _RecommenderService_UploadRecommendations_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
