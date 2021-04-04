@@ -29,7 +29,7 @@ function _M.Get()
 
   if not status then
     
-          ngx.status = ngx.HTTP_INTERNAL_SERVER_ERROR
+        ngx.status = ngx.HTTP_INTERNAL_SERVER_ERROR
         if (ret.message) then
             ngx.header.content_type = "text/plain"
             ngx.say("Failed to get recommendations: " .. ret.message)
