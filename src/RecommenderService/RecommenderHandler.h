@@ -88,11 +88,23 @@ void RecommenderServiceHandler::UploadRecommendations(const int64_t user_id, con
       mongoc_client_pool_push(_mongodb_client_pool, mongodb_client);
       throw se;
    } else {
-       bson_t *new_doc = bson_new();
-       BSON_APPEND_INT64(new_doc, "user_id", user_id);
-       BSON_APPEND_UTF8(new_doc, "movie_ids", movie_id.front().c_str());
-       bson_error_t error;
+      bson_t *new_doc = bson_new();
+      BSON_APPEND_INT64(new_doc, "user_id", user_id);
+//       BSON_APPEND_UTF8(new_doc, "movie_ids", movie_id.front().c_str());
 
+      const char *key;
+      int idx = 0;
+      char buf[16];
+      bson_t movie_id_list;
+      BSON_APPEND_ARRAY_BEGIN(new_doc, "movie_ids", &movie_id_list);
+      for (auto &mid : movie_id) {
+         bson_uint32_to_string(idx, &key, buf, sizeof buf);
+         BSON_APPEND_UTF8(&movie_id_list, key, mid.c_str());
+         idx++;
+      }
+      bson_append_array_end(new_doc, &movie_id_list);
+
+      bson_error_t error;
       bool plotinsert = mongoc_collection_insert_one (collection, new_doc, nullptr, nullptr, &error);
 
       if (!plotinsert) {
@@ -151,11 +163,11 @@ void RecommenderServiceHandler::GetRecommendations(std::vector<std::string>& _re
       } else {
         auto recommendations_json_char = bson_as_json(doc, nullptr);
         json recommendations_json = json::parse(recommendations_json_char);
-        _return.push_back(recommendations_json["movie_ids"]);
+//        _return.push_back(recommendations_json["movie_ids"]);
 //S
-//        for (auto &item : user_info_json["movie_ids"]) {
-//            _return.photo_ids.emplace_back(item);
-//        }
+        for (auto &movie_id : recommendations_json["movie_ids"]) {
+            _return.push_back(movie_id);
+        }
       }
 
       // Get recommended movie ids for this user
